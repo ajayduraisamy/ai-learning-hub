@@ -19,12 +19,15 @@ interface AppState {
   theme: 'light' | 'dark'
   sidebarCollapsed: boolean
   searchQuery: string
+  recentSearches: string[]
   toggleComplete: (topicId: string) => void
   toggleBookmark: (topicId: string) => void
   toggleTheme: () => void
   toggleSidebar: () => void
   setCurrentTopic: (topicId: string) => void
   setSearchQuery: (query: string) => void
+  addRecentSearch: (query: string) => void
+  clearRecentSearches: () => void
 }
 
 export const useStore = create<AppState>()(
@@ -36,6 +39,7 @@ export const useStore = create<AppState>()(
       theme: 'light',
       sidebarCollapsed: false,
       searchQuery: '',
+      recentSearches: [],
       toggleComplete: (topicId) =>
         set((state) => ({
           completedTopics: state.completedTopics.includes(topicId)
@@ -60,6 +64,13 @@ export const useStore = create<AppState>()(
         set({ currentTopic: topicId }),
       setSearchQuery: (query) =>
         set({ searchQuery: query }),
+      addRecentSearch: (query) =>
+        set((state) => {
+          const filtered = state.recentSearches.filter((s) => s !== query)
+          return { recentSearches: [query, ...filtered].slice(0, 10) }
+        }),
+      clearRecentSearches: () =>
+        set({ recentSearches: [] }),
     }),
     {
       name: 'ai-learning-hub-store',

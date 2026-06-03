@@ -1,72 +1,28 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Brain, Search, Moon, Sun, ExternalLink, Menu, X } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases } from '@/data/sidebarData'
+import SearchModal from '@/components/SearchModal'
 
 export default function Navbar() {
   const navigate = useNavigate()
-  const { theme, toggleTheme, searchQuery, setSearchQuery, completedTopics, sidebarCollapsed, toggleSidebar } = useStore()
+  const { theme, toggleTheme, completedTopics, sidebarCollapsed, toggleSidebar } = useStore()
   const [searchOpen, setSearchOpen] = useState(false)
-  const [results, setResults] = useState<{ id: string; title: string; phaseTitle: string }[]>([])
-  const searchRef = useRef<HTMLInputElement>(null)
-  const modalRef = useRef<HTMLDivElement>(null)
 
   const totalTopics = phases.reduce((acc, p) => acc + p.topics.length, 0)
   const progress = totalTopics > 0 ? Math.round((completedTopics.length / totalTopics) * 100) : 0
 
   useEffect(() => {
-    if (searchOpen && searchRef.current) {
-      searchRef.current.focus()
-    }
-  }, [searchOpen])
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSearchOpen(false)
-        setSearchQuery('')
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault()
+        setSearchOpen(true)
       }
     }
-    window.addEventListener('keydown', handleEsc)
-    return () => window.removeEventListener('keydown', handleEsc)
-  }, [setSearchQuery])
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        setSearchOpen(false)
-        setSearchQuery('')
-      }
-    }
-    if (searchOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [searchOpen, setSearchQuery])
-
-  const handleSearch = (query: string) => {
-    setSearchQuery(query)
-    if (query.trim()) {
-      const allTopics = phases.flatMap((p) =>
-        p.topics.map((t) => ({ ...t, phaseTitle: p.title }))
-      )
-      const filtered = allTopics.filter(
-        (t) =>
-          t.title.toLowerCase().includes(query.toLowerCase()) ||
-          t.id.toLowerCase().includes(query.toLowerCase())
-      )
-      setResults(filtered.slice(0, 10))
-    } else {
-      setResults([])
-    }
-  }
-
-  const handleSelect = (topicId: string) => {
-    setSearchOpen(false)
-    setSearchQuery('')
-    navigate(`/topic/${topicId}`)
-  }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [])
 
   const circumference = 2 * Math.PI * 14
 
@@ -153,51 +109,7 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {searchOpen && (
-        <div className="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center pt-20">
-          <div
-            ref={modalRef}
-            className="w-full max-w-lg bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden"
-          >
-            <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-              <Search size={18} className="text-gray-400" />
-              <input
-                ref={searchRef}
-                type="text"
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search topics..."
-                className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-400"
-              />
-              <button
-                onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
-                className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-              >
-                ESC
-              </button>
-            </div>
-            {results.length > 0 && (
-              <div className="max-h-80 overflow-y-auto">
-                {results.map((r) => (
-                  <button
-                    key={r.id}
-                    onClick={() => handleSelect(r.id)}
-                    className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-0"
-                  >
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{r.title}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{r.phaseTitle}</div>
-                  </button>
-                ))}
-              </div>
-            )}
-            {searchQuery && results.length === 0 && (
-              <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
-                No topics found for "{searchQuery}"
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   )
 }

@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle, Circle, Bookmark, ArrowLeft, ArrowRight,
   Share2, FileText, Brain, Beaker, Code2, Building2,
-  Clock, HelpCircle, Sparkles,
+  Clock, HelpCircle, Sparkles, ChevronRight, Home,
+  BarChart3,
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases, getTopicById } from '@/data/sidebarData'
@@ -131,6 +132,8 @@ export default function TopicPage() {
       {showQuiz && (
         <QuizModal
           questions={content.quiz}
+          topicId={topicId}
+          topicTitle={topicInfo.title}
           onClose={() => setShowQuiz(false)}
         />
       )}
@@ -140,12 +143,25 @@ export default function TopicPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
         >
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 mb-4 flex-wrap">
+            <Link to="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors flex items-center gap-1">
+              <Home size={12} />
+              Home
+            </Link>
+            <ChevronRight size={10} className="text-gray-300 dark:text-gray-600" />
+            <span className="text-gray-700 dark:text-gray-300 font-medium truncate max-w-[200px]">
+              {topicInfo.phaseTitle}
+            </span>
+            <ChevronRight size={10} className="text-gray-300 dark:text-gray-600" />
+            <span className="text-primary-600 dark:text-primary-400 font-medium truncate max-w-[200px]">
+              {topicInfo.title}
+            </span>
+          </nav>
+
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
             <div className="min-w-0">
-              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
-                <span className="text-primary-600 dark:text-primary-400 font-medium">{topicInfo.phaseTitle}</span>
-              </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{topicInfo.title}</h1>
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${difficultyColors[content.difficulty]}`}>
@@ -257,6 +273,39 @@ export default function TopicPage() {
 
           {/* Bottom Actions */}
           <div className="mt-10 space-y-4">
+            {/* Phase Progress */}
+            {phase && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700">
+                <div className="relative w-10 h-10 shrink-0">
+                  <svg width="40" height="40" viewBox="0 0 40 40" className="transform -rotate-90">
+                    <circle cx="20" cy="20" r="16" fill="none" stroke="currentColor" strokeWidth="3" className="text-gray-200 dark:text-gray-700" />
+                    <circle
+                      cx="20" cy="20" r="16" fill="none" stroke="currentColor" strokeWidth="3"
+                      className="text-primary-500"
+                      strokeDasharray={100.53}
+                      strokeDashoffset={100.53 - (phaseCompleted / phaseTotal) * 100.53}
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-600 dark:text-gray-400">
+                    {phaseProgress}%
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-medium text-gray-700 dark:text-gray-300 truncate">{phase.title}</div>
+                  <div className="text-[11px] text-gray-400">{phaseCompleted} of {phaseTotal} topics completed</div>
+                </div>
+                <button
+                  onClick={() => navigate('/progress')}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                >
+                  <BarChart3 size={12} />
+                  Details
+                </button>
+              </div>
+            )}
+
+            {/* Quiz Button */}
             {isCompleted && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
@@ -274,6 +323,7 @@ export default function TopicPage() {
               </motion.div>
             )}
 
+            {/* Next topic banner after completion */}
             {justCompleted && nextTopic && (
               <motion.div
                 initial={{ opacity: 0, y: 8 }}

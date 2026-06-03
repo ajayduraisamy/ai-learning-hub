@@ -2,6 +2,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Lightbulb, Info, Target, ChevronRight, BookOpen } from 'lucide-react'
 
@@ -12,6 +13,8 @@ interface TheoryTabProps {
 }
 
 export default function TheoryTab({ theory, objectives, prerequisites }: TheoryTabProps) {
+  const navigate = useNavigate()
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 12 }}
@@ -34,12 +37,22 @@ export default function TheoryTab({ theory, objectives, prerequisites }: TheoryT
         </ul>
       </div>
 
-      {/* Prerequisites */}
+      {/* Prerequisites with links */}
       {prerequisites.length > 0 && (
-        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-lg px-4 py-2.5">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-xl px-4 py-3 border border-gray-100 dark:border-gray-700">
           <BookOpen size={14} className="shrink-0" />
-          <span className="font-medium">Prerequisites:</span>
-          {prerequisites.join(', ')}
+          <span className="font-medium text-gray-600 dark:text-gray-300">Prerequisites:</span>
+          {prerequisites.map((prereq, i) => (
+            <span key={prereq} className="flex items-center gap-1">
+              <button
+                onClick={() => navigate(`/topic/${prereq}`)}
+                className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 hover:underline underline-offset-2 font-medium transition-colors"
+              >
+                {prereq}
+              </button>
+              {i < prerequisites.length - 1 && <span className="text-gray-300 dark:text-gray-600">,</span>}
+            </span>
+          ))}
         </div>
       )}
 
@@ -60,12 +73,29 @@ export default function TheoryTab({ theory, objectives, prerequisites }: TheoryT
         </div>
       </div>
 
+      {/* Key Definitions */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <Info size={16} className="text-primary-500" />
+          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Key Definitions</h3>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            { term: 'Supervised Learning', def: 'Model learns from labeled training data to predict outputs for new inputs' },
+            { term: 'Unsupervised Learning', def: 'Model finds patterns in unlabeled data without explicit guidance' },
+            { term: 'Feature Engineering', def: 'Process of selecting and transforming variables for better model performance' },
+            { term: 'Gradient Descent', def: 'Optimization algorithm that iteratively minimizes the loss function' },
+          ].map((item) => (
+            <div key={item.term} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700">
+              <div className="text-xs font-bold text-primary-600 dark:text-primary-400 uppercase mb-1">{item.term}</div>
+              <div className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{item.def}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Markdown Theory Content */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Info size={16} className="text-primary-500" />
-          <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Detailed Content</h3>
-        </div>
         <div className="prose prose-gray dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-primary-600 dark:prose-a:text-primary-400 prose-code:text-sm prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-pre:bg-gray-900 dark:prose-pre:bg-gray-950 prose-pre:text-gray-100">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}

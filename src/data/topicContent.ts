@@ -7,6 +7,17 @@ export interface CodeExample {
   explanation: string
 }
 
+export interface QuizQuestion {
+  id: string
+  type: 'mcq' | 'truefalse' | 'code' | 'fillblank' | 'match'
+  question: string
+  options?: string[]
+  correctAnswer: string
+  explanation: string
+  code?: string
+  pairs?: { left: string; right: string }[]
+}
+
 export interface TopicContent {
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced'
   estimatedTime: string
@@ -29,12 +40,7 @@ export interface TopicContent {
     jobRoles: string[]
     furtherReading: string[]
   }
-  quiz: {
-    question: string
-    options: string[]
-    correctIndex: number
-    explanation: string
-  }[]
+  quiz: QuizQuestion[]
 }
 
 function getPhaseForTopic(topicId: string) {
@@ -46,7 +52,7 @@ function getPhaseForTopic(topicId: string) {
   return phases[0]
 }
 
-function getDifficulty(topicId: string): 'Beginner' | 'Intermediate' | 'Advanced' {
+export function getDifficulty(topicId: string): 'Beginner' | 'Intermediate' | 'Advanced' {
   const id = topicId.toLowerCase()
   if (id.startsWith('p0') || id.startsWith('p1') || id === 'p2-linear-algebra' || id === 'p2-calculus') return 'Beginner'
   if (id.startsWith('p15') || id.startsWith('p16') || id.startsWith('p17') || id.startsWith('p18') || id.startsWith('p19') || id.startsWith('p20') || id.startsWith('p21')) return 'Advanced'
@@ -55,7 +61,7 @@ function getDifficulty(topicId: string): 'Beginner' | 'Intermediate' | 'Advanced
   return 'Intermediate'
 }
 
-function getEstimatedTime(topicId: string): string {
+export function getEstimatedTime(topicId: string): string {
   const id = topicId.toLowerCase()
   if (id.startsWith('p0') || id.startsWith('p1')) return '30 minutes'
   if (id.startsWith('p2')) return '60 minutes'
@@ -325,6 +331,8 @@ Total parameters: 44,854,544`,
 const topicQuizTemplates: Record<string, TopicContent['quiz']> = {
   'p8-transformers': [
     {
+      id: 't1',
+      type: 'mcq',
       question: 'What does the scaling factor 1/√d_k in the attention mechanism prevent?',
       options: [
         'Overfitting to training data',
@@ -332,52 +340,58 @@ const topicQuizTemplates: Record<string, TopicContent['quiz']> = {
         'Gradients from vanishing during backpropagation',
         'The model from learning positional information',
       ],
-      correctIndex: 1,
+      correctAnswer: 'Dot products from growing too large, pushing softmax into low-gradient regions',
       explanation: 'The dot product of Q and K grows large with higher dimensions, which pushes softmax into regions with extremely small gradients. Scaling by 1/√d_k keeps the values in a reasonable range for gradient-based learning.',
     },
     {
-      question: 'Why is positional encoding necessary in Transformers?',
-      options: [
-        'Because the model has no recurrence or convolution, so it has no inherent notion of token order',
-        'To encode the part-of-speech of each token',
-        'To compress the input sequence length',
-        'To initialize the attention weights',
-      ],
-      correctIndex: 0,
-      explanation: 'Unlike RNNs (which process sequentially) or CNNs (which have spatial locality), Transformers process all tokens in parallel and have no built-in sense of position. Positional encodings are added to give the model this information.',
+      id: 't2',
+      type: 'truefalse',
+      question: 'Transformers can process all tokens in a sequence simultaneously, unlike RNNs which must process tokens sequentially.',
+      correctAnswer: 'True',
+      explanation: 'This is the key advantage of Transformers over RNNs. Self-attention allows all tokens to be processed in parallel, enabling massive parallelism during training.',
     },
     {
-      question: 'What is the key advantage of Transformers over RNNs?',
+      id: 't3',
+      type: 'code',
+      question: 'What does the following attention output represent?',
+      code: `import torch
+import torch.nn.functional as F
+
+Q = torch.randn(1, 1, 4, 8)
+K = torch.randn(1, 1, 4, 8)
+V = torch.randn(1, 1, 4, 8)
+d_k = Q.size(-1)
+scores = torch.matmul(Q, K.transpose(-2, -1)) / (d_k ** 0.5)
+attention = F.softmax(scores, dim=-1)
+output = torch.matmul(attention, V)`,
       options: [
-        'Transformers use fewer parameters than RNNs',
-        'Transformers can parallelize computation across the sequence, while RNNs must process tokens sequentially',
-        'Transformers do not require training data',
-        'Transformers are easier to deploy on mobile devices',
+        'A weighted sum of the Value vectors, where weights are the attention probabilities',
+        'The raw dot product between Query and Key vectors',
+        'The positional encoding of the input sequence',
+        'The final classification logits of the model',
       ],
-      correctIndex: 1,
-      explanation: 'RNNs process tokens one at a time, with each step depending on the previous hidden state. Transformers compute representations for all tokens simultaneously using self-attention, enabling massive parallelism during training.',
+      correctAnswer: 'A weighted sum of the Value vectors, where weights are the attention probabilities',
+      explanation: 'The softmax-normalized attention scores are used to compute a weighted sum of the Value vectors. This produces the context-aware representation for each token.',
     },
     {
-      question: 'In multi-head attention, what does each head learn?',
-      options: [
-        'The same patterns but with different random initializations',
-        'Different aspects of token relationships (e.g., syntax, semantics, position)',
-        'Different vocabulary words',
-        'Different positions in the output sequence',
-      ],
-      correctIndex: 1,
-      explanation: 'Each attention head projects Q, K, V into different subspaces, allowing them to specialize. Research shows heads capture diverse patterns — some focus on syntactic dependencies, others on semantic relationships, and others on positional patterns.',
+      id: 't4',
+      type: 'fillblank',
+      question: 'The formula for Scaled Dot-Product Attention is: Attention(Q, K, V) = softmax(___ / √d_k) × V. Fill in the blank.',
+      correctAnswer: 'QK^T',
+      explanation: 'The attention scores are computed as the dot product of Query and Key matrices (QK^T), scaled by 1/√d_k, then passed through softmax to get attention weights that are applied to the Value matrix V.',
     },
     {
-      question: 'What does the encoder-decoder cross-attention in a Transformer do?',
-      options: [
-        'Computes attention within the encoder',
-        'Computes attention within the decoder',
-        'Allows the decoder to attend to the encoder\'s output representations',
-        'Computes attention between different training examples',
+      id: 't5',
+      type: 'match',
+      question: 'Match each Transformer component with its description:',
+      pairs: [
+        { left: 'Multi-Head Self-Attention', right: 'Tokens attend to all other tokens in parallel' },
+        { left: 'Positional Encoding', right: 'Adds information about token order using sine/cosine functions' },
+        { left: 'Feed-Forward Network', right: 'Two linear transformations with ReLU activation per position' },
+        { left: 'Layer Normalization', right: 'Stabilizes training by normalizing across feature dimensions' },
       ],
-      correctIndex: 2,
-      explanation: 'Cross-attention (also called encoder-decoder attention) allows each position in the decoder to attend to all positions in the encoder output. This is how the decoder incorporates information from the input sequence when generating output.',
+      correctAnswer: 'All matched correctly',
+      explanation: 'These four components form the core of each Transformer layer. Self-attention captures relationships, positional encoding adds order information, FFN transforms features, and layer normalization stabilizes training.',
     },
   ],
 }
@@ -625,6 +639,8 @@ function generateGenericQuiz(title: string): TopicContent['quiz'] {
   const lower = title.toLowerCase()
   return [
     {
+      id: 'g1',
+      type: 'mcq',
       question: `What is the primary purpose of ${title}?`,
       options: [
         'To replace human decision-making entirely',
@@ -632,52 +648,52 @@ function generateGenericQuiz(title: string): TopicContent['quiz'] {
         'To eliminate the need for programming',
         'To make all systems fully autonomous',
       ],
-      correctIndex: 1,
+      correctAnswer: `To solve a specific class of problems using ${lower.includes('ml') ? 'machine learning' : 'data-driven'} approaches`,
       explanation: `${title} provides a systematic approach to solving specific problems. It's a tool in the AI/ML toolkit, not a silver bullet for all challenges.`,
     },
     {
-      question: 'Which approach is most appropriate when starting with a new problem?',
-      options: [
-        'Build the most complex model possible',
-        'Start with a simple baseline, then iteratively improve',
-        'Skip directly to deep learning',
-        'Avoid using any existing libraries or frameworks',
-      ],
-      correctIndex: 1,
+      id: 'g2',
+      type: 'truefalse',
+      question: 'Starting with a simple baseline and iteratively improving is the recommended approach when tackling a new problem.',
+      correctAnswer: 'True',
       explanation: 'Starting simple establishes a baseline and helps you understand the problem. Iterative improvement ensures you only add complexity when it provides measurable value.',
     },
     {
-      question: 'Why is data quality important in AI/ML?',
+      id: 'g3',
+      type: 'code',
+      question: 'What concept does this Python pattern demonstrate?',
+      code: `def train_test_split(data, labels, test_size=0.2):
+    split_idx = int(len(data) * (1 - test_size))
+    return (data[:split_idx], data[split_idx:],
+            labels[:split_idx], labels[split_idx:])`,
       options: [
-        'Data quality has no impact on model performance',
-        'Models trained on poor quality data produce unreliable results ("garbage in, garbage out")',
-        'Only large companies need to worry about data quality',
-        'Data quality only matters for deep learning models',
+        'Cross-validation splitting',
+        'Hold-out validation splitting',
+        'Stratified splitting',
+        'Time-series splitting',
       ],
-      correctIndex: 1,
-      explanation: 'The quality of your data directly determines the quality of your results. No amount of sophisticated modeling can compensate for fundamentally flawed data.',
+      correctAnswer: 'Hold-out validation splitting',
+      explanation: 'This splits data into training and testing sets using a simple ratio. Unlike k-fold cross-validation, this is a single hold-out split and is the simplest form of data splitting for model evaluation.',
     },
     {
-      question: 'What is the role of evaluation metrics?',
-      options: [
-        'To make models look better than they are',
-        'To objectively measure model performance and guide improvements',
-        'To replace human judgment entirely',
-        'To satisfy academic requirements only',
-      ],
-      correctIndex: 1,
-      explanation: 'Evaluation metrics provide objective, quantifiable measurements of model performance. They help you compare approaches, track progress, and make data-driven decisions.',
+      id: 'g4',
+      type: 'fillblank',
+      question: `In AI/ML, the principle "garbage in, ___ out" reminds us that data quality directly impacts model quality.`,
+      correctAnswer: 'garbage',
+      explanation: 'The phrase "garbage in, garbage out" (GIGO) emphasizes that poor quality input data will inevitably produce poor quality outputs, regardless of how sophisticated the model is.',
     },
     {
-      question: 'How should you handle the ethical implications of AI systems?',
-      options: [
-        'Ignore them — technology is neutral',
-        'Consider ethics throughout the development lifecycle, from data collection to deployment and monitoring',
-        'Only consider ethics if required by law',
-        'Leave ethical considerations to philosophers, not engineers',
+      id: 'g5',
+      type: 'match',
+      question: 'Match each ML concept with its correct description:',
+      pairs: [
+        { left: 'Supervised Learning', right: 'Model learns from labeled input-output pairs' },
+        { left: 'Unsupervised Learning', right: 'Model finds patterns in unlabeled data' },
+        { left: 'Reinforcement Learning', right: 'Agent learns through rewards and penalties' },
+        { left: 'Transfer Learning', right: 'Knowledge from one task applied to another' },
       ],
-      correctIndex: 1,
-      explanation: 'Ethical AI requires proactive consideration at every stage. This includes fairness in training data, transparency in decision-making, privacy protection, and ongoing monitoring for unintended consequences.',
+      correctAnswer: 'All matched correctly',
+      explanation: 'These four learning paradigms cover the main approaches in machine learning. Each is suited to different types of problems and data availability scenarios.',
     },
   ]
 }

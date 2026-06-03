@@ -1,0 +1,10 @@
+const fs = require('fs');
+const p = 'D:/Ajay/ai-learning-hub/src/content/phases/phase-16/model-serving.ts';
+let c = fs.readFileSync(p, 'utf8');
+let l = c.split('\n');
+l[48] = l[48].replaceAll('\\'.repeat(2) + '`', '\\' + '`');
+l[71] = l[71].replaceAll('\\'.repeat(2) + '`', '\\' + '`');
+console.log('Line 49:', JSON.stringify(l[48]));
+console.log('Line 72:', JSON.stringify(l[71]));
+fs.writeFileSync(p, l.join('\n'), 'utf8');
+console.log('DONE');

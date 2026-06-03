@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Brain, Search, Moon, Sun, ExternalLink, Menu, X } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { Brain, Search, Moon, Sun, ExternalLink, Menu, X, FlaskConical } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases } from '@/data/sidebarData'
 import SearchModal from '@/components/SearchModal'
@@ -81,6 +81,14 @@ export default function Navbar() {
             {completedTopics.length} / {totalTopics} completed
           </div>
         </div>
+
+        <Link
+          to="/playground"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="Playground"
+        >
+          <FlaskConical size={20} className="text-purple-500" />
+        </Link>
 
         <button
           onClick={toggleTheme}

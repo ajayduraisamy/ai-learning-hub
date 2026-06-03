@@ -20,6 +20,9 @@ interface AppState {
   sidebarCollapsed: boolean
   searchQuery: string
   recentSearches: string[]
+  quizScores: Record<string, number>
+  feedback: Record<string, { helpful: boolean; text?: string }>
+  achievementDates: Record<string, string>
   toggleComplete: (topicId: string) => void
   toggleBookmark: (topicId: string) => void
   toggleTheme: () => void
@@ -28,6 +31,9 @@ interface AppState {
   setSearchQuery: (query: string) => void
   addRecentSearch: (query: string) => void
   clearRecentSearches: () => void
+  setQuizScore: (topicId: string, score: number) => void
+  submitFeedback: (topicId: string, helpful: boolean, text?: string) => void
+  earnAchievement: (badgeId: string) => void
 }
 
 export const useStore = create<AppState>()(
@@ -40,6 +46,9 @@ export const useStore = create<AppState>()(
       sidebarCollapsed: false,
       searchQuery: '',
       recentSearches: [],
+      quizScores: {},
+      feedback: {},
+      achievementDates: {},
       toggleComplete: (topicId) =>
         set((state) => ({
           completedTopics: state.completedTopics.includes(topicId)
@@ -71,6 +80,24 @@ export const useStore = create<AppState>()(
         }),
       clearRecentSearches: () =>
         set({ recentSearches: [] }),
+      setQuizScore: (topicId, score) =>
+        set((state) => ({
+          quizScores: { ...state.quizScores, [topicId]: score },
+        })),
+      submitFeedback: (topicId, helpful, text) =>
+        set((state) => ({
+          feedback: { ...state.feedback, [topicId]: { helpful, text } },
+        })),
+      earnAchievement: (badgeId) =>
+        set((state) => {
+          if (state.achievementDates[badgeId]) return state
+          return {
+            achievementDates: {
+              ...state.achievementDates,
+              [badgeId]: new Date().toISOString(),
+            },
+          }
+        }),
     }),
     {
       name: 'ai-learning-hub-store',

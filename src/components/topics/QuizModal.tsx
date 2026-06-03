@@ -337,7 +337,7 @@ function CircularScore({ percentage }: { percentage: number }) {
 
 function ResultsScreen({ questions, userAnswers, onRetry, onClose, topicId }: { questions: QuizQuestion[]; userAnswers: Map<string, string>; onRetry: () => void; onClose: () => void; topicId: string }) {
   const navigate = useNavigate()
-  const { setCurrentTopic } = useStore()
+  const { setCurrentTopic, setQuizScore } = useStore()
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   const total = questions.length
@@ -360,6 +360,10 @@ function ResultsScreen({ questions, userAnswers, onRetry, onClose, topicId }: { 
 
   const percentage = total > 0 ? Math.round((correct / total) * 100) : 0
   const passed = percentage >= 60
+
+  useEffect(() => {
+    setQuizScore(topicId, percentage)
+  }, [topicId, percentage, setQuizScore])
 
   const allTopics = useMemo(() => getAllTopics(), [])
   const currentIndex = allTopics.findIndex((t) => t.id === topicId)

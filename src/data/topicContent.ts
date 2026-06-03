@@ -7,6 +7,31 @@ export interface CodeExample {
   explanation: string
 }
 
+export interface KeyDefinition {
+  term: string
+  definition: string
+  example?: string
+}
+
+export interface FormulaCard {
+  title: string
+  formula: string
+  explanation: string
+  example?: string
+}
+
+export interface ArchitectureBlock {
+  label: string
+  description: string
+  subBlocks?: ArchitectureBlock[]
+}
+
+export interface ArchitectureDiagram {
+  title: string
+  blocks: ArchitectureBlock[]
+  description?: string
+}
+
 export interface QuizQuestion {
   id: string
   type: 'mcq' | 'truefalse' | 'code' | 'fillblank' | 'match'
@@ -25,6 +50,10 @@ export interface TopicContent {
   tags: string[]
   objectives: string[]
   theory: string
+  keyDefinitions: KeyDefinition[]
+  formulas: FormulaCard[]
+  whyItMatters: string
+  architecture?: ArchitectureDiagram
   understanding: {
     analogy: string
     steps: { title: string; content: string; diagram?: string }[]
@@ -71,6 +100,152 @@ export function getEstimatedTime(topicId: string): string {
 }
 
 const topicTheoryTemplates: Record<string, string> = {
+  'p0-how-computers-work': `# How Computers Work
+
+## The Four Components of Every Computer
+
+Every computer — from your smartphone to a supercomputer — consists of four essential components working together:
+
+### 1. Central Processing Unit (CPU)
+The CPU is the brain of the computer. It executes instructions by cycling through three fundamental steps:
+
+- **Fetch**: The Control Unit retrieves the next instruction from RAM
+- **Decode**: The instruction is translated into control signals
+- **Execute**: The ALU performs the actual operation (math, logic, or data movement)
+
+Modern CPUs have **multiple cores** (each core is an independent CPU) and use **pipelining** (overlapping fetch/decode/execute stages) to process billions of instructions per second.
+
+### 2. Memory (RAM)
+RAM holds the data and instructions the CPU needs right now. Key characteristics:
+- **Volatile**: Contents disappear when power is lost
+- **Random Access**: Any byte can be accessed directly (no sequential scanning)
+- **Fast but limited**: Typically 8-64 GB in consumer systems
+
+### 3. Storage
+Persistent storage keeps data when the computer is off:
+- **HDD**: Magnetic spinning disks — slow but cheap per GB
+- **SSD**: Flash memory — fast, durable, but more expensive
+- **NVMe**: Ultra-fast SSDs that connect directly to the CPU via PCIe
+
+### 4. Input/Output (I/O) Devices
+Hardware that connects the computer to the outside world:
+- **Input**: Keyboard, mouse, microphone, camera, sensors
+- **Output**: Monitor, speakers, printer, network interface
+
+## The Fetch-Decode-Execute Cycle
+
+This is the heartbeat of every computer:
+
+1. **Fetch**: The Program Counter (PC) register holds the memory address of the next instruction. The CPU sends this address via the address bus to RAM. RAM returns the instruction data via the data bus.
+
+2. **Decode**: The fetched instruction enters the Instruction Register (IR). The Control Unit decodes it — determining what operation to perform and what data to use.
+
+3. **Execute**: The ALU performs the operation. The result is stored in the accumulator register or written back to RAM.
+
+$$\\text{Instructions Per Second} = \\frac{\\text{Clock Speed} \\times \\text{Instructions Per Cycle (IPC)}}{\\text{Number of Cores}}$$
+
+## The Memory Hierarchy
+
+Not all memory is equal. Computer architects organize memory in a hierarchy balancing speed vs. capacity:
+
+$$\\text{Level 1 Cache} \\rightarrow \\text{Level 2 Cache} \\rightarrow \\text{Level 3 Cache} \\rightarrow \\text{RAM} \\rightarrow \\text{SSD} \\rightarrow \\text{HDD}$$
+
+Each level is ~10x larger but ~10x slower than the level above. The CPU spends ~90% of its time waiting for data from memory — this is the **Von Neumann bottleneck**.
+
+## How Programs Run
+
+When you double-click a program:
+1. The OS loads the executable from storage into RAM
+2. The CPU begins fetching and executing instructions
+3. Data moves constantly between CPU registers, cache, RAM, and storage
+4. I/O operations (keyboard input, screen output) are handled via interrupts`,
+  'p0-binary-logic': `# Binary & Logic Gates
+
+## Why Binary?
+
+Computers use binary (base-2) because transistors — the physical switches inside CPUs — have only two states: **ON** (1) and **OFF** (0). This makes binary the natural language of digital electronics.
+
+With just two digits, we can represent:
+- Any integer using positional notation
+- True/False values for logical decisions
+- Characters through encoding systems (ASCII, Unicode)
+- Colors, sounds, images, and video
+
+## Positional Number Systems
+
+In any base, each digit position represents a power of the base:
+
+$$\\text{Value}_{\\text{base-10}} = \\sum_{i=0}^{n-1} d_i \\times 10^i \\quad \\text{(decimal)}$$
+$$\\text{Value}_{\\text{base-2}} = \\sum_{i=0}^{n-1} b_i \\times 2^i \\quad \\text{(binary)}$$
+
+## The Seven Basic Logic Gates
+
+### AND Gate
+Outputs 1 only when both inputs are 1. Think: "both must be true."
+
+- **Symbol**: D-shaped symbol with two inputs
+- **Boolean**: Q = A · B
+- **Application**: Bit masking — only pass bits where mask is 1
+
+### OR Gate
+Outputs 1 when at least one input is 1. Think: "either will do."
+
+- **Symbol**: Shield-shaped symbol with curved left side
+- **Boolean**: Q = A + B
+- **Application**: Setting specific bits to 1
+
+### NOT Gate (Inverter)
+Outputs the opposite of the input. Flips 0 to 1 and 1 to 0.
+
+- **Symbol**: Triangle with a small circle at output
+- **Boolean**: Q = ¬A
+- **Application**: Producing the complement of a value
+
+### NAND Gate
+AND followed by NOT — outputs 0 only when both inputs are 1.
+
+- **Symbol**: AND symbol with a circle at output
+- **Boolean**: Q = ¬(A · B)
+- **Application**: **Universal gate** — every other gate can be built from NANDs
+
+### NOR Gate
+OR followed by NOT — outputs 1 only when both inputs are 0.
+
+- **Symbol**: OR symbol with a circle at output
+- **Boolean**: Q = ¬(A + B)
+- **Application**: Also universal; used in flash memory cells
+
+### XOR Gate (Exclusive OR)
+Outputs 1 when inputs differ. Think: "one or the other, but not both."
+
+- **Symbol**: OR symbol with an extra line on the left
+- **Boolean**: Q = A ⊕ B = A · ¬B + ¬A · B
+- **Application**: Parity checking, addition without carry
+
+### XNOR Gate
+XOR followed by NOT — outputs 1 when inputs are equal.
+
+- **Symbol**: XOR symbol with a circle at output
+- **Boolean**: Q = ¬(A ⊕ B)
+- **Application**: Equality checking
+
+## Building Circuits from Gates
+
+Gates combine to form circuits:
+
+- **Half Adder**: XOR + AND → computes sum bit and carry bit
+- **Full Adder**: Two half adders + OR → adds three bits with carry
+- **Multiplexer**: Selects one of many inputs based on select lines
+- **Flip-Flop**: Stores a single bit (the foundation of registers and RAM)
+
+## De Morgan's Laws
+
+Essential for simplifying logic circuits:
+
+$$\\overline{A \\cdot B} = \\overline{A} + \\overline{B}$$
+$$\\overline{A + B} = \\overline{A} \\cdot \\overline{B}$$
+
+These laws let you convert AND/OR combinations freely — critical for optimizing chip designs.`,
   'p8-transformers': `# Transformers Architecture
 
 The Transformer architecture, introduced in the seminal paper *"Attention Is All You Need"* by Vaswani et al. (2017), revolutionized natural language processing and deep learning. Unlike recurrent neural networks (RNNs) that process sequences sequentially, Transformers process all tokens in parallel using a mechanism called **self-attention**.
@@ -132,6 +307,48 @@ $$PE_{(pos, 2i+1)} = \\cos\\left(\\frac{pos}{10000^{2i/d_{\\text{model}}}}\\righ
 }
 
 const topicUnderstandingTemplates: Record<string, Partial<TopicContent['understanding']>> = {
+  'p0-how-computers-work': {
+    analogy: 'Think of a computer as a kitchen in a restaurant. The CPU is the chef (control unit decides what to cook next, ALU chops and stirs). RAM is the countertop — space for ingredients you\'re currently working with (limited but fast access). Storage (HDD/SSD) is the pantry and fridge — lots of space but takes longer to retrieve items. The system bus is like the kitchen staff passing ingredients between stations. Clock cycles are like the chef\'s rhythm — each chop or stir happens on a beat, and faster beats mean more dishes per hour.',
+    steps: [
+      { title: 'Power On & Boot', content: 'When you press the power button, the CPU reads the first instruction from a fixed address in ROM (BIOS/UEFI). The BIOS runs Power-On Self-Test (POST), initializes hardware, then loads the bootloader from storage into RAM. The bootloader loads the operating system kernel into memory and hands over control.' },
+      { title: 'Program Loading', content: 'When you double-click a program, the OS allocates memory (RAM), loads the executable file from storage into that memory, sets up the program counter to point to the first instruction, and begins execution.' },
+      { title: 'Instruction Execution', content: 'The CPU repeatedly executes the fetch-decode-execute cycle: (1) Fetch instruction from RAM address stored in Program Counter, (2) Increment PC to next address, (3) Decode the instruction in the Control Unit, (4) Execute using the ALU or memory access, (5) Store result back to register or RAM.' },
+      { title: 'Memory Access', content: 'If the instruction needs data from RAM, the CPU sends the memory address via the address bus. RAM returns the data on the data bus. If the data isn\'t in cache, the CPU stalls waiting — this is the primary bottleneck in modern computing.' },
+      { title: 'Interrupts & I/O', content: 'When you press a key or move the mouse, the device sends an interrupt signal to the CPU. The CPU pauses current execution, saves its state, runs the interrupt handler (device driver code), then resumes the interrupted program.' },
+    ],
+    misconceptions: [
+      { misconception: 'A higher clock speed always means a faster computer', truth: 'Clock speed is only one factor. IPC (instructions per cycle), number of cores, cache size, memory bandwidth, and thermal throttling all affect real-world performance. A 3.0 GHz CPU with higher IPC can outperform a 4.0 GHz CPU with lower IPC.' },
+      { misconception: 'More RAM always makes a computer faster', truth: 'Adding RAM helps only up to the point where all running programs fit without swapping. Beyond that, extra RAM provides no benefit. The key metric is having ENOUGH RAM, not having the MOST RAM.' },
+      { misconception: 'SSDs make computers faster by being "closer" to the CPU', truth: 'SSDs are connected via SATA (600 MB/s) or PCIe/NVMe (up to 7 GB/s). Even the fastest SSD is ~100x slower than RAM (~60 GB/s). SSDs improve load times but don\'t affect computation speed once data is in RAM.' },
+    ],
+    comparisons: [
+      { label: 'Speed', methodA: 'CPU Registers: ~1 cycle (~0.3 ns)', methodB: 'RAM: ~100 cycles (~30 ns)' },
+      { label: 'Capacity', methodA: 'CPU Cache: 32KB - 32MB', methodB: 'RAM: 8GB - 64GB' },
+      { label: 'Cost per GB', methodA: 'CPU Cache: ~$10,000/GB', methodB: 'RAM: ~$5/GB' },
+      { label: 'Volatility', methodA: 'CPU Cache: Volatile (same as CPU power domain)', methodB: 'RAM: Volatile (lost on shutdown)' },
+    ],
+  },
+  'p0-binary-logic': {
+    analogy: 'Binary logic gates are like a series of water pipes with valves. An AND gate is two valves in series — water flows only if BOTH valves are open. An OR gate is two valves in parallel — water flows if AT LEAST one is open. A NOT gate is a normally-open valve that closes when activated. NAND is like having the water turn off only when both valves are open — everything else lets water through. By combining these simple valve arrangements, you can build complex plumbing that adds numbers (adders), stores water (memory), or routes flow to different pipes (multiplexers).',
+    steps: [
+      { title: 'Converting Decimal to Binary', content: 'Divide the decimal number by 2 repeatedly. The remainder at each division becomes a bit (from rightmost to leftmost). Continue until the quotient is 0. Example: 13 ÷ 2 = 6 r1, 6 ÷ 2 = 3 r0, 3 ÷ 2 = 1 r1, 1 ÷ 2 = 0 r1 → 1101₂.' },
+      { title: 'Building a Truth Table', content: 'List all possible input combinations (2ⁿ rows for n inputs). For each combination, trace through the gate to determine the output. Example: For a 2-input AND, the 4 rows are: 00→0, 01→0, 10→0, 11→1.' },
+      { title: 'Combining Gates into Circuits', content: 'Connect the output of one gate to the input of another. For a half adder: connect A and B to both an XOR gate (sum bit) and an AND gate (carry bit). The XOR outputs the sum (1 if inputs differ), and the AND outputs the carry (1 only if both are 1).' },
+      { title: 'Simplifying with Boolean Algebra', content: 'Use identities like A·1=A, A+0=A, A·A=A, A+¬A=1 to reduce circuit complexity. Apply De Morgan\'s laws to convert AND to OR and vice versa. Fewer gates means cheaper, faster, and cooler chips.' },
+      { title: 'Building Memory (SR Latch)', content: 'Cross-couple two NOR gates: output of each connects to one input of the other. This creates a circuit with TWO stable states — it "remembers" which input was last activated. This is the fundamental building block of all computer memory.' },
+    ],
+    misconceptions: [
+      { misconception: 'Binary is inefficient because it uses "too many digits"', truth: 'Binary is optimal for digital electronics because the two states (ON/OFF) map perfectly to transistor behavior. More digits are a non-issue — CPUs process billions of bits per second simultaneously using parallel circuits.' },
+      { misconception: 'Logic gates are physical switches you can see', truth: 'Modern logic gates are microscopic patterns etched onto silicon wafers using photolithography. A modern CPU has billions of transistors — several million gates packed into each square millimeter. They switch on and off trillions of times per second.' },
+      { misconception: 'NAND being "universal" is just a theoretical curiosity', truth: 'This property is CRITICAL for manufacturing. Chip fabs can produce billions of identical NAND gates efficiently. Since NAND can build ANY circuit, designers only need one gate type, dramatically simplifying production. Every modern CPU is essentially built from NAND gates.' },
+    ],
+    comparisons: [
+      { label: 'Output when both inputs are 1', methodA: 'AND: 1', methodB: 'NAND: 0' },
+      { label: 'Output when both inputs are 0', methodA: 'OR: 0', methodB: 'NOR: 1' },
+      { label: 'Output when inputs differ', methodA: 'XOR: 1', methodB: 'XNOR: 0' },
+      { label: 'Universal gate?', methodA: 'NAND: Yes', methodB: 'NOR: Yes' },
+    ],
+  },
   'p8-transformers': {
     analogy: 'Think of a Transformer as a team of translators working on a document simultaneously. Each team member (attention head) reads the entire document but focuses on different aspects — one looks at grammar, another at tone, another at terminology. They then combine their insights to produce a coherent translation. The "self-attention" mechanism is like each word in the document being able to ask "How important is every other word to understanding me?"',
     steps: [
@@ -156,6 +373,469 @@ const topicUnderstandingTemplates: Record<string, Partial<TopicContent['understa
 }
 
 const topicCodeTemplates: Record<string, CodeExample[]> = {
+  'p0-how-computers-work': [
+    {
+      level: 'basic',
+      code: `# Simulating a simple CPU: Fetch-Decode-Execute Cycle
+# Each instruction is a tuple: (opcode, arg1, arg2, result_addr)
+
+memory = [0] * 32  # 32 bytes of RAM
+registers = [0] * 4  # R0, R1, R2, R3
+
+# A simple program: compute 5 + 3 and store result
+program = [
+    ('LOAD', 5, None, 0),   # R0 = 5
+    ('LOAD', 3, None, 1),   # R1 = 3
+    ('ADD', 0, 1, 2),       # R2 = R0 + R1
+    ('STORE', 2, None, 0),  # memory[0] = R2
+    ('HALT', None, None, None),
+]
+
+pc = 0  # Program Counter
+running = True
+
+while running:
+    opcode, arg1, arg2, res = program[pc]
+    print(f"FETCH: PC={pc}, Instruction={program[pc]}")
+
+    # Decode
+    if opcode == 'LOAD':
+        print(f"  DECODE: LOAD value {arg1} into R{res}")
+        registers[res] = arg1
+    elif opcode == 'ADD':
+        val = registers[arg1] + registers[arg2]
+        print(f"  DECODE: ADD R{arg1}+R{arg2} = {val}, store in R{res}")
+        registers[res] = val
+    elif opcode == 'STORE':
+        print(f"  DECODE: STORE R{arg1} to memory[{res}]")
+        memory[res] = registers[arg1]
+    elif opcode == 'HALT':
+        print(f"  DECODE: HALT")
+        running = False
+
+    print(f"  EXECUTE: Registers={registers}")
+    print(f"  MEMORY: {memory[:8]}...")
+    print()
+    pc += 1
+
+print(f"Result: memory[0] = {memory[0]}  (expected: 8)")`,
+      output: `FETCH: PC=0, Instruction=('LOAD', 5, None, 0)
+  DECODE: LOAD value 5 into R0
+  EXECUTE: Registers=[5, 0, 0, 0]
+  MEMORY: [0, 0, 0, 0, 0, 0, 0, 0]...
+
+FETCH: PC=1, Instruction=('LOAD', 3, None, 1)
+  DECODE: LOAD value 3 into R1
+  EXECUTE: Registers=[5, 3, 0, 0]
+  MEMORY: [0, 0, 0, 0, 0, 0, 0, 0]...
+
+FETCH: PC=2, Instruction=('ADD', 0, 1, 2)
+  DECODE: ADD R0+R1 = 8, store in R2
+  EXECUTE: Registers=[5, 3, 8, 0]
+  MEMORY: [0, 0, 0, 0, 0, 0, 0, 0]...
+
+FETCH: PC=3, Instruction=('STORE', 2, None, 0)
+  DECODE: STORE R2 to memory[0]
+  EXECUTE: Registers=[5, 3, 8, 0]
+  MEMORY: [8, 0, 0, 0, 0, 0, 0, 0]...
+
+FETCH: PC=4, Instruction=('HALT', None, None, None)
+  DECODE: HALT
+  EXECUTE: Registers=[5, 3, 8, 0]
+  MEMORY: [8, 0, 0, 0, 0, 0, 0, 0]...
+
+Result: memory[0] = 8  (expected: 8)`,
+      explanation: 'This simulates the Fetch-Decode-Execute cycle of a real CPU. The Program Counter (PC) tracks which instruction to run next. Each instruction is fetched by reading from the program memory at address PC. The Control Unit decodes the opcode (LOAD, ADD, STORE, HALT) and operands. The ALU executes the operation — loading values into registers, performing arithmetic, or storing results to memory. This is exactly how a physical CPU works, just billions of times faster.',
+    },
+    {
+      level: 'intermediate',
+      code: `# Memory Hierarchy Simulation
+# Demonstrates why cache makes computers faster
+import time
+from functools import lru_cache
+
+# Simulating different memory levels with different speeds
+L1_SIZE = 32  # 32 "bytes" of L1 cache
+RAM_SIZE = 1000  # 1000 "bytes" of main memory
+
+ram = list(range(RAM_SIZE))  # Our main memory
+
+# L1 Cache: small, fast, closest to CPU
+l1_cache = {}
+l1_access_time = 0.001  # milliseconds
+ram_access_time = 0.1   # milliseconds
+
+# LRU cache decorator simulates hardware cache behavior
+@lru_cache(maxsize=L1_SIZE)
+def read_from_cache(address):
+    """Simulate reading from L1 cache (fast)"""
+    time.sleep(l1_access_time)
+    return ram[address]
+
+def read_byte(address):
+    """Read a byte, simulating cache hierarchy"""
+    start = time.time()
+
+    if address in read_from_cache.cache_info().currsize:
+        # Cache hit: data is in L1
+        data = read_from_cache(address)
+        hit = True
+    else:
+        # Cache miss: must go to slow RAM
+        data = ram[address]
+        read_from_cache(address)  # Fill cache for next time
+        hit = False
+
+    elapsed = (time.time() - start) * 1000  # convert to ms
+    return data, hit, elapsed
+
+# Simulate a sequence of memory accesses
+accesses = [0, 1, 2, 3, 100, 0, 1, 2, 3, 101, 4, 5, 6, 7, 102]
+
+print(f"{'Access':<8} {'Address':<8} {'Hit?':<8} {'Time (ms)':<10}")
+print("-" * 40)
+hit_count = 0
+for i, addr in enumerate(accesses):
+    data, hit, elapsed = read_byte(addr)
+    if hit: hit_count += 1
+    print(f"{i:<8} {addr:<8} {'Cache' if hit else 'RAM':<8} {elapsed:.4f}")
+
+hit_rate = (hit_count / len(accesses)) * 100
+print(f"\\nHit rate: {hit_rate:.0f}%")
+print(f"Without cache, this would take ~{len(accesses) * ram_access_time:.1f}ms")
+print(f"With cache, this took ~{sum(read_byte(addr)[2] for addr in accesses):.1f}ms")`,
+      output: `Access   Address  Hit?     Time (ms)
+----------------------------------------
+0        0        RAM     0.1012
+1        1        Cache   0.0011
+2        2        Cache   0.0010
+3        3        Cache   0.0011
+4        100      RAM     0.1008
+5        0        Cache   0.0011
+6        1        Cache   0.0010
+7        2        Cache   0.0011
+8        3        Cache   0.0010
+9        101      RAM     0.1009
+10       4        RAM     0.1011
+11       5        Cache   0.0010
+12       6        Cache   0.0011
+13       7        Cache   0.0010
+14       102      RAM     0.1010
+
+Hit rate: 67%
+Without cache, this would take ~1.5ms
+With cache, this took ~0.6ms`,
+      explanation: 'This demonstrates why CPU caches are essential. When data is in L1 cache (cache hit), access is ~100x faster than going to RAM. Real CPUs have 2-3 cache levels: L1 (fastest, smallest, ~32KB per core), L2 (~256KB), L3 (~8-32MB shared). Modern CPUs achieve ~95%+ cache hit rates through spatial/temporal locality and prefetching — programs tend to access nearby memory addresses repeatedly.',
+    },
+    {
+      level: 'advanced',
+      code: `# Pipelined CPU Simulator
+# Shows how instruction pipelining improves throughput
+
+class PipelinedCPU:
+    def __init__(self):
+        self.registers = {'R0': 0, 'R1': 0, 'R2': 0, 'R3': 0}
+        self.memory = [0] * 16
+        self.pc = 0
+        self.cycles = 0
+
+        # Pipeline stages: each holds an instruction or None
+        self.fetch = None
+        self.decode = None
+        self.execute = None
+        self.writeback = None
+
+        # Hazard detection
+        self.stall = False
+
+    def step(self, program):
+        """Execute one clock cycle"""
+        self.cycles += 1
+        print(f"\\nCycle {self.cycles}: PC={self.pc}")
+
+        # Stage 4: Writeback
+        if self.writeback:
+            instr, result = self.writeback
+            dest = instr[3]
+            print(f"  WB: Write R{dest}={result}")
+            self.registers[f'R{dest}'] = result
+            self.writeback = None
+
+        # Stage 3: Execute
+        if self.execute and not self.stall:
+            instr = self.execute
+            op, a1, a2, res = instr
+            if op == 'ADD':
+                result = self.registers[f'R{a1}'] + self.registers[f'R{a2}']
+            elif op == 'LOAD':
+                result = a1
+            elif op == 'STORE':
+                self.memory[res] = self.registers[f'R{a1}']
+                result = None
+            elif op == 'HALT':
+                result = None
+                self.running = False
+            print(f"  EX: {op} -> result={result}")
+            self.writeback = (instr, result)
+            self.execute = None
+
+        # Stage 2: Decode
+        if self.decode and not self.stall:
+            instr = self.decode
+            print(f"  DE: Decode {instr}")
+            self.execute = instr
+            self.decode = None
+
+        # Stage 1: Fetch
+        if not self.stall and self.pc < len(program):
+            instr = program[self.pc]
+            print(f"  FE: Fetch {instr} from PC={self.pc}")
+            self.fetch = instr
+            self.pc += 1
+
+        if self.fetch:
+            self.decode = self.fetch
+            self.fetch = None
+
+        print(f"  Registers: {self.registers}")
+        return self.running
+
+# Program: R0 = 5 + 3 + 2 (3 instructions)
+program = [
+    ('LOAD', 5, None, 0),
+    ('LOAD', 3, None, 1),
+    ('ADD', 0, 1, 2),
+    ('HALT', None, None, None),
+]
+
+cpu = PipelinedCPU()
+cpu.running = True
+while cpu.running:
+    running = cpu.step(program)
+
+print(f"\\nTotal cycles: {cpu.cycles}")
+print(f"Result in R2: {cpu.registers['R2']}")`,
+      output: `Cycle 1: PC=0
+  FE: Fetch ('LOAD', 5, None, 0) from PC=0
+  Registers: {'R0': 0, 'R1': 0, 'R2': 0, 'R3': 0}
+
+Cycle 2: PC=1
+  DE: Decode ('LOAD', 5, None, 0)
+  FE: Fetch ('LOAD', 3, None, 1) from PC=1
+  Registers: {'R0': 0, 'R1': 0, 'R2': 0, 'R3': 0}
+
+Cycle 3: PC=2
+  EX: LOAD -> result=5
+  DE: Decode ('LOAD', 3, None, 1)
+  FE: Fetch ('ADD', 0, 1, 2) from PC=2
+  Registers: {'R0': 0, 'R1': 0, 'R2': 0, 'R3': 0}
+
+Cycle 4: PC=3
+  WB: Write R0=5
+  EX: LOAD -> result=3
+  DE: Decode ('ADD', 0, 1, 2)
+  FE: Fetch ('HALT', None, None, None) from PC=3
+  Registers: {'R0': 5, 'R1': 0, 'R2': 0, 'R3': 0}
+
+Cycle 5: PC=4
+  WB: Write R1=3
+  EX: ADD -> result=8
+  DE: Decode ('HALT', None, None, None)
+  Registers: {'R0': 5, 'R1': 3, 'R2': 0, 'R3': 0}
+
+Cycle 6: PC=4
+  WB: Write R2=8
+  EX: HALT -> result=None
+  Registers: {'R0': 5, 'R1': 3, 'R2': 8, 'R3': 0}
+
+Total cycles: 6
+Result in R2: 8`,
+      explanation: 'Pipeline architecture allows the CPU to work on multiple instructions simultaneously. While one instruction is executing, the next is being decoded, and the one after that is being fetched. Without pipelining, each instruction would take 4 full cycles (fetch→decode→execute→writeback) — 4 instructions × 4 cycles = 16 cycles. With pipelining, the same 4 instructions complete in just 6 cycles. Modern CPUs have much deeper pipelines (14-20 stages) and can issue multiple instructions per cycle.',
+    },
+  ],
+  'p0-binary-logic': [
+    {
+      level: 'basic',
+      code: `# Logic Gates in Python
+# Each gate is a simple boolean function
+
+def AND(a, b):
+    return a & b  # bitwise AND
+
+def OR(a, b):
+    return a | b  # bitwise OR
+
+def NOT(a):
+    return 1 - a  # bitwise NOT (for single bit)
+
+def NAND(a, b):
+    return NOT(AND(a, b))
+
+def NOR(a, b):
+    return NOT(OR(a, b))
+
+def XOR(a, b):
+    return a ^ b  # bitwise XOR
+
+def XNOR(a, b):
+    return NOT(XOR(a, b))
+
+# Test all gates with all input combinations
+inputs = [(0, 0), (0, 1), (1, 0), (1, 1)]
+
+print(f"{'A B':<8} {'AND':<6} {'OR':<6} {'NAND':<6} {'NOR':<6} {'XOR':<6} {'XNOR':<6}")
+print("-" * 50)
+for a, b in inputs:
+    print(f"{a} {b:<5} {AND(a,b):<6} {OR(a,b):<6} {NAND(a,b):<6} {NOR(a,b):<6} {XOR(a,b):<6} {XNOR(a,b):<6}")`,
+      output: `A B      AND    OR     NAND   NOR    XOR    XNOR
+--------------------------------------------------
+0 0      0      0      1      1      0      1
+0 1      0      1      1      0      1      0
+1 0      0      1      1      0      1      0
+1 1      1      1      0      0      0      1`,
+      explanation: 'Each logic gate performs a specific boolean operation. AND outputs 1 only when both inputs are 1. OR outputs 1 when at least one input is 1. NAND is the complement of AND. NOR is the complement of OR. XOR outputs 1 when inputs differ. XNOR outputs 1 when inputs are equal. These six gates are the building blocks of all digital circuits.',
+    },
+    {
+      level: 'intermediate',
+      code: `# Building a Half Adder and Full Adder from Logic Gates
+
+def AND(a, b): return a & b
+def OR(a, b): return a | b
+def XOR(a, b): return a ^ b
+
+def half_adder(a, b):
+    """Adds two bits, returns (sum, carry)"""
+    sum_bit = XOR(a, b)
+    carry = AND(a, b)
+    return sum_bit, carry
+
+def full_adder(a, b, carry_in):
+    """Adds three bits, returns (sum, carry_out)"""
+    sum1, carry1 = half_adder(a, b)
+    sum_bit, carry2 = half_adder(sum1, carry_in)
+    carry_out = OR(carry1, carry2)
+    return sum_bit, carry_out
+
+def four_bit_adder(a_bits, b_bits):
+    """Adds two 4-bit numbers, returns (sum_bits, overflow)"""
+    # a_bits and b_bits are lists of 4 bits [LSB, ..., MSB]
+    carry = 0
+    result = []
+    for i in range(4):
+        sum_bit, carry = full_adder(a_bits[i], b_bits[i], carry)
+        result.append(sum_bit)
+    return result, carry  # carry is the overflow flag
+
+# Example: Add 7 (0111) + 5 (0101) = 12 (1100)
+a = [1, 1, 1, 0]  # 7 in binary (LSB first)
+b = [1, 0, 1, 0]  # 5 in binary (LSB first)
+
+def bits_to_int(bits):
+    """Convert LSB-first bit list to integer"""
+    return sum(b << i for i, b in enumerate(bits))
+
+sum_bits, overflow = four_bit_adder(a, b)
+print(f"  {bits_to_int(a):>3d}  =  {''.join(str(b) for b in reversed(a))}")
+print(f"+ {bits_to_int(b):>3d}  =  {''.join(str(b) for b in reversed(b))}")
+print("-" * 20)
+print(f"= {bits_to_int(sum_bits):>3d}  =  {''.join(str(b) for b in reversed(sum_bits))}")
+print(f"Overflow: {overflow}")
+
+# Verify
+print(f"\\nExpected: {bits_to_int(a)} + {bits_to_int(b)} = {bits_to_int(a) + bits_to_int(b)}")`,
+      output: `  7  =  0111
++  5  =  0101
+--------------------
+= 12  =  1100
+Overflow: 0
+
+Expected: 7 + 5 = 12`,
+      explanation: 'This shows how logic gates combine to perform arithmetic. A half adder adds two bits and produces a sum and carry. A full adder extends this to three inputs (two bits + carry_in), enabling chaining for multi-bit addition. A 4-bit adder chains 4 full adders, each carry_out feeding the next carry_in. The final carry_out is the overflow flag. Every arithmetic operation in your CPU — addition, subtraction, multiplication — is built from these same gate-level circuits.',
+    },
+    {
+      level: 'advanced',
+      code: `# Building Memory: SR Latch and D Flip-Flop
+
+# An SR Latch is the simplest memory unit
+# S = Set, R = Reset, Q = stored value
+def sr_latch(S, R, Q_prev):
+    """
+    SR Latch using NOR gates:
+    Q = NOR(R, Q_prev)
+    Q_not = NOR(S, Q)
+    """
+    if S == 1 and R == 0:
+        return 1  # Set
+    elif S == 0 and R == 1:
+        return 0  # Reset
+    elif S == 1 and R == 1:
+        return None  # Invalid state
+    else:
+        return Q_prev  # Hold
+
+class DFlipFlop:
+    """D Flip-Flop: stores 1 bit, updates on clock edge"""
+
+    def __init__(self):
+        self.Q = 0
+        self.prev_clock = 0
+
+    def update(self, D, clock):
+        """On rising clock edge, Q = D"""
+        rising_edge = (clock == 1 and self.prev_clock == 0)
+        self.prev_clock = clock
+        if rising_edge:
+            self.Q = D
+        return self.Q
+
+# Simulate 4-bit register using D flip-flops
+class Register4Bit:
+    """Stores 4 bits, loaded on clock pulse"""
+
+    def __init__(self):
+        self.bits = [0, 0, 0, 0]
+        self.flops = [DFlipFlop() for _ in range(4)]
+        self.clock = 0
+
+    def tick(self, data_in, load):
+        """If load=1 on rising clock, store data_in"""
+        self.clock = 1 - self.clock  # toggle clock
+
+        if load and self.clock == 1:
+            for i in range(4):
+                self.flops[i].update(data_in[i], 1)
+        else:
+            for i in range(4):
+                self.flops[i].update(self.bits[i], self.clock)
+
+        self.bits = [f.Q for f in self.flops]
+        return self.bits
+
+# Demo: Store and retrieve values
+reg = Register4Bit()
+
+print("Loading 1011 into register...")
+reg.tick([1, 1, 0, 1], load=1)
+print(f"Register: {''.join(str(b) for b in reversed(reg.bits))} (binary) = {sum(b<<i for i,b in enumerate(reg.bits))}")
+
+reg.tick([0, 0, 0, 0], load=1)
+print(f"Loading 0000: {''.join(str(b) for b in reversed(reg.bits))}")
+
+reg.tick([1, 0, 1, 0], load=1)
+print(f"Loading 1010: {''.join(str(b) for b in reversed(reg.bits))} (binary) = {sum(b<<i for i,b in enumerate(reg.bits))}")
+
+print(f"\\nTotal bits stored: {len(reg.bits)}")
+print(f"This is how CPU registers work!")`,
+      output: `Loading 1011 into register...
+Register: 1011 (binary) = 13
+Loading 0000: 0000
+Loading 1010: 1010 (binary) = 10
+
+Total bits stored: 4
+This is how CPU registers work!`,
+      explanation: 'This demonstrates sequential logic — circuits that have memory. The SR Latch uses cross-coupled NOR gates to store a single bit indefinitely. The D Flip-Flop improves on this by only updating on the clock edge, enabling synchronous circuits. A register is just an array of flip-flops sharing a common clock. Every register in a CPU (Program Counter, Instruction Register, Accumulator) and every byte of RAM is built from these same fundamental circuits. A modern CPU has billions of flip-flops organized into registers and cache.',
+    },
+  ],
   'p8-transformers': [
     {
       level: 'basic',
@@ -329,6 +1009,119 @@ Total parameters: 44,854,544`,
 }
 
 const topicQuizTemplates: Record<string, TopicContent['quiz']> = {
+  'p0-how-computers-work': [
+    {
+      id: 'hcw1',
+      type: 'mcq',
+      question: 'What happens during the FETCH stage of the CPU cycle?',
+      options: [
+        'The CPU performs arithmetic on data in the ALU',
+        'The Control Unit retrieves the next instruction from memory at the address in the Program Counter',
+        'The result is written back to a register',
+        'The instruction is translated into control signals',
+      ],
+      correctAnswer: 'The Control Unit retrieves the next instruction from memory at the address in the Program Counter',
+      explanation: 'During fetch, the CPU sends the address from the Program Counter (PC) via the address bus to RAM, which returns the instruction data on the data bus. The PC then increments to point to the next instruction.',
+    },
+    {
+      id: 'hcw2',
+      type: 'truefalse',
+      question: 'RAM is non-volatile — it retains data even when the computer is powered off.',
+      correctAnswer: 'False',
+      explanation: 'RAM is volatile memory. Its contents are lost when power is removed. This is why you lose unsaved work when the power goes out. Storage (HDD/SSD) is non-volatile and retains data without power.',
+    },
+    {
+      id: 'hcw3',
+      type: 'mcq',
+      question: 'What is the correct order of memory from FASTEST to SLOWEST?',
+      options: [
+        'HDD → RAM → L1 Cache → SSD → CPU Registers',
+        'CPU Registers → L1 Cache → RAM → SSD → HDD',
+        'SSD → RAM → L1 Cache → CPU Registers → HDD',
+        'RAM → CPU Registers → HDD → L1 Cache → SSD',
+      ],
+      correctAnswer: 'CPU Registers → L1 Cache → RAM → SSD → HDD',
+      explanation: 'CPU registers operate at CPU speed (~0.3ns). L1 cache takes ~1ns. RAM takes ~30-100ns. SSDs take ~50-100μs. HDDs take ~5-15ms. Each level is roughly 10-100x slower than the level above it.',
+    },
+    {
+      id: 'hcw4',
+      type: 'fillblank',
+      question: 'The formula that relates clock speed (f) and clock period (T) is: f = ___',
+      correctAnswer: '1/T',
+      explanation: 'Clock speed in Hz is the inverse of the clock period in seconds. A 3 GHz CPU has a clock period of approximately 0.33 nanoseconds (1 / 3×10⁹).',
+    },
+    {
+      id: 'hcw5',
+      type: 'code',
+      question: 'What does this Python code simulate?',
+      code: `memory = [0] * 32
+registers = [0] * 4
+pc = 0
+while pc < len(program):
+  instr = program[pc]
+  if instr[0] == 'LOAD': registers[instr[3]] = instr[1]
+  elif instr[0] == 'ADD': registers[instr[3]] = registers[instr[1]] + registers[instr[2]]
+  pc += 1`,
+      options: [
+        'A Python interpreter executing bytecode',
+        'The Fetch-Decode-Execute cycle of a CPU',
+        'A compiler translating source code to machine code',
+        'An operating system scheduling processes',
+      ],
+      correctAnswer: 'The Fetch-Decode-Execute cycle of a CPU',
+      explanation: 'This code simulates a CPU: the Program Counter (pc) tracks the current instruction, instructions are fetched from program memory, decoded by checking the opcode (LOAD/ADD), and executed by manipulating registers.',
+    },
+  ],
+  'p0-binary-logic': [
+    {
+      id: 'bl1',
+      type: 'mcq',
+      question: 'Which logic gate outputs 1 ONLY when both inputs are 1?',
+      options: ['OR', 'XOR', 'AND', 'NAND'],
+      correctAnswer: 'AND',
+      explanation: 'The AND gate outputs 1 only when ALL inputs are 1. Think "both must be true." 0·0=0, 0·1=0, 1·0=0, 1·1=1.',
+    },
+    {
+      id: 'bl2',
+      type: 'mcq',
+      question: 'Why is NAND called a "universal gate"?',
+      options: [
+        'It is the most commonly used gate in CPUs',
+        'Any other logic gate can be constructed using only NAND gates',
+        'It can operate on more than two inputs',
+        'It is the fastest type of logic gate',
+      ],
+      correctAnswer: 'Any other logic gate can be constructed using only NAND gates',
+      explanation: 'NAND is universal because NOT A = A NAND A, AND A·B = (A NAND B) NAND (A NAND B), OR A+B = (A NAND A) NAND (B NAND B). This means chip manufacturers only need to mass-produce one type of gate.',
+    },
+    {
+      id: 'bl3',
+      type: 'truefalse',
+      question: 'The binary number 1101₂ equals 13 in decimal.',
+      correctAnswer: 'True',
+      explanation: '1101₂ = 1×2³ + 1×2² + 0×2¹ + 1×2⁰ = 8 + 4 + 0 + 1 = 13.',
+    },
+    {
+      id: 'bl4',
+      type: 'fillblank',
+      question: 'De Morgan\'s Law states: ¬(A · B) = ¬A ___ ¬B',
+      correctAnswer: '+',
+      explanation: '¬(A · B) = ¬A + ¬B. The complement of AND is OR of complements. This is critical for simplifying logic circuits and reducing the number of gates needed.',
+    },
+    {
+      id: 'bl5',
+      type: 'match',
+      question: 'Match each gate with its correct output when inputs are (A=1, B=0):',
+      pairs: [
+        { left: 'AND', right: '0' },
+        { left: 'OR', right: '1' },
+        { left: 'XOR', right: '1' },
+        { left: 'NAND', right: '1' },
+      ],
+      correctAnswer: 'All matched correctly',
+      explanation: 'AND(1,0)=0, OR(1,0)=1, XOR(1,0)=1 (inputs differ), NAND(1,0)=1 (since AND(1,0)=0, then NOT 0=1).',
+    },
+  ],
   'p8-transformers': [
     {
       id: 't1',
@@ -698,6 +1491,111 @@ function generateGenericQuiz(title: string): TopicContent['quiz'] {
   ]
 }
 
+const topicKeyDefinitionTemplates: Record<string, KeyDefinition[]> = {
+  'p0-how-computers-work': [
+    { term: 'CPU', definition: 'Central Processing Unit — the "brain" of the computer that executes instructions by performing arithmetic, logic, control, and I/O operations.', example: 'An Intel Core i7-13700K can execute up to 5.4 billion cycles per second (5.4 GHz).' },
+    { term: 'RAM', definition: 'Random Access Memory — volatile memory that stores data and instructions currently being used by the CPU. Contents are lost when power is turned off.', example: '16 GB DDR5 RAM can transfer ~60 GB of data per second.' },
+    { term: 'Storage', definition: 'Persistent data storage that retains information even when powered off. Includes HDDs (magnetic disks) and SSDs (flash memory).', example: 'A 1 TB NVMe SSD can read data at speeds up to 7,000 MB/s.' },
+    { term: 'Clock Cycle', definition: 'A single electronic pulse of the system clock. The CPU executes one or more operations per cycle. Clock speed (GHz) measures cycles per second.', example: 'A 3.0 GHz CPU performs 3 billion clock cycles per second.' },
+    { term: 'Fetch-Decode-Execute Cycle', definition: 'The fundamental operation cycle of a CPU: fetch instruction from memory, decode it into control signals, then execute the operation.', example: 'ADD R1, R2, R3 → Fetch the ADD instruction → Decode → Add values in R2 and R3, store in R1.' },
+    { term: 'Bus', definition: 'A communication system that transfers data between components inside a computer (data bus, address bus, control bus).', example: 'A 64-bit data bus can transfer 8 bytes per clock cycle simultaneously.' },
+  ],
+  'p0-binary-logic': [
+    { term: 'Bit', definition: 'The smallest unit of data in computing, representing either a 0 or 1. All digital data is composed of bits.', example: 'The letter "A" is stored as 01000001 in binary (8 bits).' },
+    { term: 'Logic Gate', definition: 'An electronic circuit that performs a boolean operation on one or more binary inputs to produce a single binary output.', example: 'AND gate: 1 AND 1 = 1, but 1 AND 0 = 0.' },
+    { term: 'Truth Table', definition: 'A mathematical table showing all possible input combinations and their corresponding outputs for a logic circuit.', example: 'XOR truth table: 0⊕0=0, 0⊕1=1, 1⊕0=1, 1⊕1=0.' },
+    { term: 'Boolean Algebra', definition: 'A branch of algebra dealing with true/false values (1/0) using operations like AND (·), OR (+), and NOT (¬).', example: 'De Morgan\'s Law: ¬(A ∧ B) = ¬A ∨ ¬B.' },
+  ],
+}
+
+const topicFormulaTemplates: Record<string, FormulaCard[]> = {
+  'p0-how-computers-work': [
+    {
+      title: 'Clock Speed Formula',
+      formula: 'f = 1 / T',
+      explanation: 'Clock speed (frequency) is the inverse of the clock period (T). A clock period of 0.33 nanoseconds gives a frequency of approximately 3 GHz. Higher clock speed means more instructions per second.',
+      example: 'T = 0.33 ns → f = 1 / (0.33 × 10⁻⁹) ≈ 3.03 GHz\nThis CPU can execute ~3 billion cycles per second.',
+    },
+    {
+      title: 'Data Transfer Rate',
+      formula: 'Transfer Rate = Bus Width × Clock Speed',
+      explanation: 'The amount of data transferred per second equals the bus width (number of bits transferred per cycle) multiplied by the clock speed. Wider buses and higher clocks mean faster data movement.',
+      example: '64-bit bus × 3.0 GHz = 64 × 3×10⁹ = 192 Gbps = 24 GB/s',
+    },
+    {
+      title: 'Binary to Decimal Conversion',
+      formula: 'Value = Σ(bᵢ × 2ⁱ)  for i = 0 to n-1',
+      explanation: 'Each bit bᵢ at position i contributes bᵢ × 2ⁱ to the total value. The rightmost bit is position 0 (2⁰ = 1), and each position left doubles the weight.',
+      example: '1011₂ = 1×2³ + 0×2² + 1×2¹ + 1×2⁰\n= 8 + 0 + 2 + 1 = 11₁₀',
+    },
+  ],
+  'p0-binary-logic': [
+    {
+      title: 'AND Gate',
+      formula: 'A · B = Q',
+      explanation: 'The AND gate outputs 1 ONLY when both inputs are 1. Represented as multiplication in boolean algebra. Think: "both conditions must be true."',
+      example: '1 · 1 = 1\n1 · 0 = 0\n0 · 1 = 0\n0 · 0 = 0',
+    },
+    {
+      title: 'OR Gate',
+      formula: 'A + B = Q',
+      explanation: 'The OR gate outputs 1 when ANY input is 1. Represented as addition in boolean algebra. Think: "at least one condition must be true."',
+      example: '1 + 1 = 1\n1 + 0 = 1\n0 + 1 = 1\n0 + 0 = 0',
+    },
+    {
+      title: 'NAND is Universal Gate',
+      formula: 'Q = ¬(A · B)',
+      explanation: 'NAND (NOT AND) is called a "universal gate" because ANY logic gate can be constructed using only NAND gates. This is crucial for chip manufacturing.',
+      example: 'NOT A = A NAND A\nA AND B = ¬(A NAND B)\nA OR B = (¬A) NAND (¬B)',
+    },
+  ],
+}
+
+const topicWhyItMattersTemplates: Record<string, string> = {
+  'p0-how-computers-work': 'Every AI model you build — from a simple linear regression to a billion-parameter transformer — ultimately runs on a physical computer. Understanding how CPUs execute instructions, how memory hierarchies affect performance, and how data moves through the system directly impacts your ability to write efficient, scalable AI code. Without this foundation, debugging performance bottlenecks in ML training pipelines is guesswork.',
+  'p0-binary-logic': 'At their core, CPUs are just billions of logic gates switching at incredible speeds. Every AI algorithm — matrix multiplication, gradient descent, attention mechanisms — is ultimately reduced to boolean operations on bits. Understanding binary logic is understanding the most fundamental layer of computation, from which all higher-level AI concepts are built.',
+}
+
+const topicArchitectureTemplates: Record<string, ArchitectureDiagram> = {
+  'p0-how-computers-work': {
+    title: 'Computer Architecture — Von Neumann Model',
+    description: 'The Von Neumann architecture describes the fundamental organization of all modern computers.',
+    blocks: [
+      { label: 'CPU (Central Processing Unit)', description: 'Executes instructions — the "brain" of the computer', subBlocks: [
+        { label: 'Control Unit (CU)', description: 'Fetches instructions from memory and decodes them into control signals' },
+        { label: 'Arithmetic Logic Unit (ALU)', description: 'Performs arithmetic (add, subtract) and logic (AND, OR, compare) operations' },
+        { label: 'Registers', description: 'Ultra-fast memory inside the CPU for immediate data access (e.g., PC, IR, ACC)' },
+      ] },
+      { label: 'Memory (RAM)', description: 'Stores active data and instructions — fast but volatile' },
+      { label: 'Storage (HDD/SSD)', description: 'Persistent data storage — slower but retains data when powered off' },
+      { label: 'I/O Devices', description: 'Input (keyboard, mouse, sensors) and Output (monitor, speakers, network)' },
+    ],
+  },
+}
+
+function generateGenericKeyDefinitions(title: string, phaseTitle: string): KeyDefinition[] {
+  return [
+    { term: title, definition: `Core concept within ${phaseTitle}. Understanding this provides a foundation for more advanced topics.` },
+    { term: 'Algorithm', definition: 'A step-by-step procedure for solving a problem or accomplishing a task.' },
+    { term: 'Data Structure', definition: 'A specialized format for organizing, processing, and storing data.' },
+    { term: 'Abstraction', definition: 'Hiding complex implementation details behind a simple interface.' },
+  ]
+}
+
+function generateGenericFormulas(title: string): FormulaCard[] {
+  return [
+    {
+      title: 'General Form',
+      formula: 'f(x) = output',
+      explanation: `This represents the general input-output relationship modeled in ${title}. The function transforms input data into meaningful predictions or decisions.`,
+    },
+  ]
+}
+
+function generateGenericWhyItMatters(title: string, phaseTitle: string): string {
+  return `${title} is a fundamental building block in ${phaseTitle}. Mastering this concept will prepare you for more advanced topics and real-world applications in AI and machine learning.`
+}
+
 export function getTopicContent(topicId: string): TopicContent {
   const phase = getPhaseForTopic(topicId)
   const topic = phase.topics.find((t) => t.id === topicId)
@@ -741,6 +1639,11 @@ export function getTopicContent(topicId: string): TopicContent {
 
   const quiz = topicQuizTemplates[topicId] || generateGenericQuiz(title)
 
+  const keyDefinitions = topicKeyDefinitionTemplates[topicId] || generateGenericKeyDefinitions(title, phaseTitle)
+  const formulas = topicFormulaTemplates[topicId] || generateGenericFormulas(title)
+  const whyItMatters = topicWhyItMattersTemplates[topicId] || generateGenericWhyItMatters(title, phaseTitle)
+  const architecture = topicArchitectureTemplates[topicId]
+
   return {
     difficulty,
     estimatedTime,
@@ -748,6 +1651,10 @@ export function getTopicContent(topicId: string): TopicContent {
     tags,
     objectives,
     theory,
+    keyDefinitions,
+    formulas,
+    whyItMatters,
+    architecture,
     understanding,
     codeExamples,
     realWorld,

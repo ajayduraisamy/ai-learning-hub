@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   BarChart3, Award, Target, TrendingUp, CheckCircle, Circle, Bookmark,
   Clock, Zap, Flame, ChevronDown, ChevronRight, Medal, Trophy,
-  Star, Layers, Search, ArrowUpDown, Sparkles, Filter
+  Star, Layers, Search, ArrowUpDown, Sparkles, Filter, Brain,
+  BookOpen, Share2, Crown
 } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useStore } from '@/store/useStore'
@@ -108,26 +109,81 @@ function StatsCard({ icon, label, value, sub, delay }: { icon: React.ReactNode; 
   )
 }
 
-function AchievementBadge({ icon, label, earned, description }: { icon: React.ReactNode; label: string; earned: boolean; description: string }) {
+const badgeColors: Record<string, { light: string; dark: string; border: string; glow: string; bg: string; text: string }> = {
+  blue: { light: 'bg-blue-50', dark: 'dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-800', glow: 'shadow-blue-500/30', bg: 'bg-blue-500', text: 'text-blue-600 dark:text-blue-400' },
+  green: { light: 'bg-green-50', dark: 'dark:bg-green-900/20', border: 'border-green-200 dark:border-green-800', glow: 'shadow-green-500/30', bg: 'bg-green-500', text: 'text-green-600 dark:text-green-400' },
+  purple: { light: 'bg-purple-50', dark: 'dark:bg-purple-900/20', border: 'border-purple-200 dark:border-purple-800', glow: 'shadow-purple-500/30', bg: 'bg-purple-500', text: 'text-purple-600 dark:text-purple-400' },
+  amber: { light: 'bg-amber-50', dark: 'dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-800', glow: 'shadow-amber-500/30', bg: 'bg-amber-500', text: 'text-amber-600 dark:text-amber-400' },
+  teal: { light: 'bg-teal-50', dark: 'dark:bg-teal-900/20', border: 'border-teal-200 dark:border-teal-800', glow: 'shadow-teal-500/30', bg: 'bg-teal-500', text: 'text-teal-600 dark:text-teal-400' },
+  pink: { light: 'bg-pink-50', dark: 'dark:bg-pink-900/20', border: 'border-pink-200 dark:border-pink-800', glow: 'shadow-pink-500/30', bg: 'bg-pink-500', text: 'text-pink-600 dark:text-pink-400' },
+  orange: { light: 'bg-orange-50', dark: 'dark:bg-orange-900/20', border: 'border-orange-200 dark:border-orange-800', glow: 'shadow-orange-500/30', bg: 'bg-orange-500', text: 'text-orange-600 dark:text-orange-400' },
+  rose: { light: 'bg-rose-50', dark: 'dark:bg-rose-900/20', border: 'border-rose-200 dark:border-rose-800', glow: 'shadow-rose-500/30', bg: 'bg-rose-500', text: 'text-rose-600 dark:text-rose-400' },
+}
+
+interface BadgeDef {
+  id: string; name: string; icon: React.ElementType; color: string;
+  requirement: string; check: () => boolean
+}
+
+function BadgeCard({ badge, earned, date, onShare }: { badge: BadgeDef; earned: boolean; date?: string; onShare?: () => void }) {
+  const Icon = badge.icon
+  const c = badgeColors[badge.color]
   return (
-    <div className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
-      earned
-        ? 'bg-white dark:bg-gray-900 border-primary-200 dark:border-primary-800 shadow-sm'
-        : 'bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700 opacity-50'
-    }`}>
-      <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-        earned ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-400'
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={`relative rounded-2xl border p-5 flex flex-col items-center text-center transition-all duration-300 ${
+        earned
+          ? `${c.light} ${c.dark} ${c.border} shadow-lg ${c.glow} shadow-md`
+          : 'border-white/20 dark:border-white/10 bg-white/40 dark:bg-white/5 opacity-40'
+      }`}
+    >
+      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-3 transition-all duration-300 ${
+        earned
+          ? `${c.bg} shadow-lg ${c.glow}`
+          : 'bg-white/30 dark:bg-white/10'
       }`}>
-        {icon}
+        <Icon size={28} className={earned ? 'text-white' : 'text-white/50'} />
       </div>
-      <div className="min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className={`text-sm font-semibold ${earned ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
-            {label}
-          </span>
-          {earned && <Sparkles size={12} className="text-yellow-500" />}
-        </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400">{description}</p>
+      <h3 className={`text-sm font-bold mb-1 ${earned ? 'text-slate-800 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
+        {badge.name}
+      </h3>
+      <p className={`text-[11px] leading-relaxed ${earned ? 'text-slate-500 dark:text-slate-400' : 'text-slate-400 dark:text-slate-500'}`}>
+        {badge.requirement}
+      </p>
+      {earned && date && (
+        <span className="mt-2 text-[10px] font-medium text-slate-400 dark:text-slate-500">
+          Earned {new Date(date).toLocaleDateString()}
+        </span>
+      )}
+      {earned && (
+        <button
+          onClick={onShare}
+          className="mt-3 flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-semibold bg-white/70 dark:bg-white/10 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-white/20 transition-all border border-slate-200 dark:border-white/10"
+        >
+          <Share2 size={10} />
+          Share
+        </button>
+      )}
+    </motion.div>
+  )
+}
+
+function NextBadgeProgress({ earnedCount, total }: { earnedCount: number; total: number }) {
+  const pct = total > 0 ? Math.round((earnedCount / total) * 100) : 0
+  return (
+    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/30 p-5">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Progress to Next Badge</span>
+        <span className="text-xs text-slate-400">{earnedCount}/{total} earned</span>
+      </div>
+      <div className="h-2.5 bg-slate-100 dark:bg-slate-700/50 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${pct}%` }}
+          className="h-full rounded-full bg-gradient-to-r from-primary-500 to-accent-500"
+          transition={{ duration: 1, ease: 'easeOut' }}
+        />
       </div>
     </div>
   )
@@ -135,7 +191,7 @@ function AchievementBadge({ icon, label, earned, description }: { icon: React.Re
 
 export default function Progress() {
   const navigate = useNavigate()
-  const { completedTopics, bookmarkedTopics, setCurrentTopic } = useStore()
+  const { completedTopics, bookmarkedTopics, quizScores, achievementDates, earnAchievement, setCurrentTopic } = useStore()
 
   const totalTopics = useMemo(() => phases.reduce((a, p) => a + p.topics.length, 0), [])
   const overallProgress = totalTopics > 0 ? Math.round((completedTopics.length / totalTopics) * 100) : 0
@@ -299,22 +355,42 @@ export default function Progress() {
     return { strongest: best, weakest: worst }
   }, [difficulties])
 
-  const achievements = useMemo(() => {
+  const badgeDefs = useMemo((): BadgeDef[] => {
     const c = completedTopics.length
-    const cp = completedPhases
+    const totalTopics = phases.reduce((a, p) => a + p.topics.length, 0)
+    const perfectQuizzes = Object.values(quizScores).filter(s => s === 100).length
+    const anyPhaseComplete = phaseStats.some(p => p.completed === p.total)
     return [
-      { id: 'first', label: 'First Steps', icon: <Star size={16} />, earned: c >= 1, description: 'Complete your first topic' },
-      { id: 'ten', label: 'Getting Started', icon: <Zap size={16} />, earned: c >= 10, description: 'Complete 10 topics' },
-      { id: 'fifty', label: 'Dedicated Learner', icon: <Flame size={16} />, earned: c >= 50, description: 'Complete 50 topics' },
-      { id: 'hundred', label: 'Century Mark', icon: <Trophy size={16} />, earned: c >= 100, description: 'Complete 100 topics' },
-      { id: 'first-phase', label: 'Phase Complete', icon: <CheckCircle size={16} />, earned: cp >= 1, description: 'Fully complete one phase' },
-      { id: 'five-phases', label: 'Phase Master', icon: <Medal size={16} />, earned: cp >= 5, description: 'Complete 5 phases' },
-      { id: 'ten-phases', label: 'Halfway There', icon: <Award size={16} />, earned: cp >= 10, description: 'Complete 10 phases' },
-      { id: 'all-phases', label: 'Grandmaster', icon: <Trophy size={16} />, earned: cp >= 22, description: 'Complete all 22 phases' },
+      { id: 'first-steps', name: 'First Steps', icon: Target, color: 'blue', requirement: 'Complete your first topic', check: () => c >= 1 },
+      { id: 'scholar', name: 'Scholar', icon: BookOpen, color: 'green', requirement: 'Complete 10 topics', check: () => c >= 10 },
+      { id: 'knowledge-seeker', name: 'Knowledge Seeker', icon: Brain, color: 'purple', requirement: 'Complete 50 topics', check: () => c >= 50 },
+      { id: 'phase-champion', name: 'Phase Champion', icon: Trophy, color: 'amber', requirement: 'Complete all topics in any phase', check: () => anyPhaseComplete },
+      { id: 'halfway-there', name: 'Halfway There', icon: Star, color: 'teal', requirement: `Complete ${Math.round(totalTopics / 2)} topics (50%)`, check: () => c >= Math.ceil(totalTopics / 2) },
+      { id: 'century', name: 'Century', icon: Medal, color: 'pink', requirement: 'Complete 100 topics', check: () => c >= 100 },
+      { id: 'quiz-master', name: 'Quiz Master', icon: Award, color: 'orange', requirement: 'Score 100% on 5 quizzes', check: () => perfectQuizzes >= 5 },
+      { id: 'ai-expert', name: 'AI Expert', icon: Crown, color: 'rose', requirement: `Complete all ${totalTopics} topics`, check: () => c >= totalTopics },
     ]
-  }, [completedTopics.length, completedPhases])
+  }, [completedTopics, quizScores, phaseStats])
 
-  const earnedAchievements = achievements.filter((a) => a.earned).length
+  useEffect(() => {
+    for (const b of badgeDefs) {
+      if (b.check() && !achievementDates[b.id]) {
+        earnAchievement(b.id)
+      }
+    }
+  }, [badgeDefs, achievementDates, earnAchievement])
+
+  const earnedBadges = badgeDefs.filter(b => b.check())
+  const earnedCount = earnedBadges.length
+
+  const shareBadge = async (badge: BadgeDef) => {
+    const text = `I earned the "${badge.name}" badge on AI Learning Hub! 🏆`
+    try {
+      await navigator.clipboard.writeText(text)
+    } catch {
+      // fallback
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -575,29 +651,16 @@ export default function Progress() {
         {/* ACHIEVEMENTS TAB */}
         {activeTab === 'achievements' && (
           <div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <Award size={24} className="text-primary-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">{earnedAchievements}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">of {achievements.length} achievements earned</div>
-                <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary-500 rounded-full transition-all" style={{ width: `${(earnedAchievements / achievements.length) * 100}%` }} />
-                </div>
-              </div>
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <Flame size={24} className="text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">{completedTopics.length}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">total topics completed</div>
-              </div>
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 text-center">
-                <Trophy size={24} className="text-yellow-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-gray-900 dark:text-white">{completedPhases}</div>
-                <div className="text-xs text-gray-500 dark:text-gray-400">phases fully completed</div>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {achievements.map((a) => (
-                <AchievementBadge key={a.id} icon={a.icon} label={a.label} earned={a.earned} description={a.description} />
+            <NextBadgeProgress earnedCount={earnedCount} total={badgeDefs.length} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+              {badgeDefs.map((b) => (
+                <BadgeCard
+                  key={b.id}
+                  badge={b}
+                  earned={b.check()}
+                  date={achievementDates[b.id]}
+                  onShare={() => shareBadge(b)}
+                />
               ))}
             </div>
           </div>

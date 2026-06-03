@@ -63,12 +63,14 @@ function Confetti() {
 export default function TopicPage() {
   const { topicId } = useParams<{ topicId: string }>()
   const navigate = useNavigate()
-  const { completedTopics, bookmarkedTopics, toggleComplete, toggleBookmark, setCurrentTopic } = useStore()
+  const { completedTopics, bookmarkedTopics, toggleComplete, toggleBookmark, setCurrentTopic, feedback, submitFeedback } = useStore()
 
   const [activeTab, setActiveTab] = useState<TabId>('theory')
   const [showQuiz, setShowQuiz] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [justCompleted, setJustCompleted] = useState(false)
+  const [feedbackText, setFeedbackText] = useState('')
+  const [showFeedbackInput, setShowFeedbackInput] = useState(false)
 
   const topicInfo = topicId ? getTopicById(topicId) : undefined
   const content = topicId ? getTopicContent(topicId) : undefined
@@ -241,6 +243,10 @@ export default function TopicPage() {
                 theory={content.theory}
                 objectives={content.objectives}
                 prerequisites={content.prerequisites}
+                keyDefinitions={content.keyDefinitions}
+                formulas={content.formulas}
+                whyItMatters={content.whyItMatters}
+                architecture={content.architecture}
               />
             )}
             {activeTab === 'understanding' && (
@@ -351,8 +357,60 @@ export default function TopicPage() {
               </motion.div>
             )}
 
+            {/* Feedback */}
+            <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/20">
+              <div className="flex items-center justify-between mb-3">
+                <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Was this helpful?</h4>
+                {feedback[topicId] && (
+                  <span className="text-[11px] text-slate-400">
+                    {feedback[topicId].helpful ? '👍' : '👎'} You voted
+                  </span>
+                )}
+              </div>
+              {!feedback[topicId] ? (
+                <>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => { submitFeedback(topicId, true); setShowFeedbackInput(false) }}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/40 transition-all"
+                    >
+                      👍 Yes
+                    </button>
+                    <button
+                      onClick={() => setShowFeedbackInput(true)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/40 transition-all"
+                    >
+                      👎 No
+                    </button>
+                  </div>
+                  {showFeedbackInput && (
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mt-3">
+                      <textarea
+                        value={feedbackText}
+                        onChange={(e) => setFeedbackText(e.target.value)}
+                        placeholder="What could be improved?"
+                        className="w-full p-3 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none focus:border-primary-500 transition-colors resize-none h-20"
+                      />
+                      <div className="flex justify-end mt-2">
+                        <button
+                          onClick={() => { submitFeedback(topicId, false, feedbackText || undefined); setShowFeedbackInput(false) }}
+                          className="px-4 py-1.5 rounded-lg text-xs font-semibold bg-primary-500 text-white hover:bg-primary-600 transition-colors"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </>
+              ) : (
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-slate-500 dark:text-slate-400">
+                  Thanks for your feedback! {feedback[topicId].helpful ? '😊' : 'We\'ll work on improving this.'}
+                </motion.p>
+              )}
+            </div>
+
             {/* Previous / Next */}
-            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
               {prevTopic ? (
                 <button
                   onClick={() => {

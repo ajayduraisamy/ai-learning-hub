@@ -1,20 +1,115 @@
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   CheckCircle, Circle, Bookmark, ArrowLeft, ArrowRight,
-  Share2, FileText, List
+  Share2, FileText, Brain, Beaker, Code2, Building2,
+  Clock, HelpCircle, Sparkles,
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases, getTopicById } from '@/data/sidebarData'
+import { getTopicContent } from '@/data/topicContent'
+import TheoryTab from '@/components/topics/TheoryTab'
+import UnderstandingTab from '@/components/topics/UnderstandingTab'
+import CodeTab from '@/components/topics/CodeTab'
+import RealWorldTab from '@/components/topics/RealWorldTab'
+import QuizModal from '@/components/topics/QuizModal'
+
+const tabs = [
+  { id: 'theory', label: 'Theory', icon: Brain },
+  { id: 'understanding', label: 'Understanding', icon: Beaker },
+  { id: 'code', label: 'Code', icon: Code2 },
+  { id: 'real-world', label: 'Real-World', icon: Building2 },
+] as const
+
+type TabId = (typeof tabs)[number]['id']
+
+const difficultyColors: Record<string, string> = {
+  Beginner: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  Intermediate: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  Advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+}
+
+function Confetti() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[80]">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 rounded-full"
+          style={{
+            background: ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444'][i % 5],
+            left: `${Math.random() * 100}%`,
+            top: '-10px',
+          }}
+          animate={{
+            y: ['0vh', '100vh'],
+            x: [0, (Math.random() - 0.5) * 200],
+            rotate: [0, 720],
+            opacity: [1, 0],
+          }}
+          transition={{
+            duration: 1.5 + Math.random(),
+            ease: 'easeIn',
+            delay: Math.random() * 0.5,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
 
 export default function TopicPage() {
   const { topicId } = useParams<{ topicId: string }>()
   const navigate = useNavigate()
-  const { completedTopics, bookmarkedTopics, toggleComplete, toggleBookmark } = useStore()
+  const { completedTopics, bookmarkedTopics, toggleComplete, toggleBookmark, setCurrentTopic } = useStore()
+
+  const [activeTab, setActiveTab] = useState<TabId>('theory')
+  const [showQuiz, setShowQuiz] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
+  const [justCompleted, setJustCompleted] = useState(false)
 
   const topicInfo = topicId ? getTopicById(topicId) : undefined
+  const content = topicId ? getTopicContent(topicId) : undefined
+  const isCompleted = topicId ? completedTopics.includes(topicId) : false
+  const isBookmarked = topicId ? bookmarkedTopics.includes(topicId) : false
 
-  if (!topicInfo) {
+  const allTopics = phases.flatMap((p) =>
+    p.topics.map((t) => ({ ...t, phaseTitle: p.title, phaseId: p.id }))
+  )
+  const currentIndex = allTopics.findIndex((t) => t.id === topicId)
+  const prevTopic = currentIndex > 0 ? allTopics[currentIndex - 1] : null
+  const nextTopic = currentIndex < allTopics.length - 1 ? allTopics[currentIndex + 1] : null
+
+  const phase = topicId ? phases.find((p) => p.topics.some((t) => t.id === topicId)) : undefined
+  const phaseCompleted = phase
+    ? phase.topics.filter((t) => completedTopics.includes(t.id)).length
+    : 0
+  const phaseTotal = phase?.topics.length || 0
+  const phaseProgress = phaseTotal > 0 ? Math.round((phaseCompleted / phaseTotal) * 100) : 0
+
+  const handleComplete = useCallback(() => {
+    if (!topicId) return
+    const nowCompleted = !completedTopics.includes(topicId)
+    toggleComplete(topicId)
+    if (nowCompleted) {
+      setShowConfetti(true)
+      setJustCompleted(true)
+      setTimeout(() => setShowConfetti(false), 2500)
+    } else {
+      setJustCompleted(false)
+    }
+  }, [topicId, completedTopics, toggleComplete])
+
+  useEffect(() => {
+    setActiveTab('theory')
+    setShowQuiz(false)
+    setJustCompleted(false)
+    setShowConfetti(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [topicId])
+
+  if (!topicInfo || !content || !topicId) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <FileText size={48} className="text-gray-300 dark:text-gray-600 mb-4" />
@@ -30,140 +125,212 @@ export default function TopicPage() {
     )
   }
 
-  const isCompleted = completedTopics.includes(topicId!)
-  const isBookmarked = bookmarkedTopics.includes(topicId!)
-
-  const allTopics = phases.flatMap((p) =>
-    p.topics.map((t) => ({ ...t, phaseTitle: p.title, phaseId: p.id }))
-  )
-  const currentIndex = allTopics.findIndex((t) => t.id === topicId)
-  const prevTopic = currentIndex > 0 ? allTopics[currentIndex - 1] : null
-  const nextTopic = currentIndex < allTopics.length - 1 ? allTopics[currentIndex + 1] : null
-
   return (
-    <div className="max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <span className="text-xs font-medium text-primary-600 dark:text-primary-400 uppercase tracking-wider">
-              {topicInfo.phaseTitle}
-            </span>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-              {topicInfo.title}
-            </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => toggleComplete(topicId!)}
-              className={`p-2 rounded-lg transition-colors ${
-                isCompleted
-                  ? 'bg-secondary-50 dark:bg-secondary-900/20 text-secondary-600'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-secondary-500'
-              }`}
-              title={isCompleted ? 'Mark incomplete' : 'Mark complete'}
-            >
-              {isCompleted ? <CheckCircle size={20} /> : <Circle size={20} />}
-            </button>
-            <button
-              onClick={() => toggleBookmark(topicId!)}
-              className={`p-2 rounded-lg transition-colors ${
-                isBookmarked
-                  ? 'bg-accent-50 dark:bg-accent-900/20 text-accent-600'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-accent-500'
-              }`}
-              title={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-            >
-              <Bookmark size={20} className={isBookmarked ? 'fill-accent-500' : ''} />
-            </button>
-            <button className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-primary-500 transition-colors" title="Share">
-              <Share2 size={20} />
-            </button>
-          </div>
-        </div>
+    <>
+      {showConfetti && <Confetti />}
+      {showQuiz && (
+        <QuizModal
+          questions={content.quiz}
+          onClose={() => setShowQuiz(false)}
+        />
+      )}
 
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <div className="prose prose-gray dark:prose-invert max-w-none">
-            <h2>Overview</h2>
-            <p>
-              Welcome to <strong>{topicInfo.title}</strong>. This topic is part of{' '}
-              {topicInfo.phaseTitle}. Use the resources below to master this subject.
-            </p>
-
-            <h2>Learning Objectives</h2>
-            <ul>
-              <li>Understand the core concepts of {topicInfo.title}</li>
-              <li>Implement practical examples and exercises</li>
-              <li>Apply best practices in real-world scenarios</li>
-              <li>Evaluate and optimize your implementations</li>
-            </ul>
-
-            <h2>Key Concepts</h2>
-            <p>
-              This section covers the fundamental ideas and techniques you need to know.
-              Each concept builds upon the previous ones, so follow along in order.
-            </p>
-
-            <h2>Resources</h2>
-            <ul>
-              <li>Official documentation and references</li>
-              <li>Interactive notebooks and code examples</li>
-              <li>Video tutorials and lectures</li>
-              <li>Practice exercises with solutions</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <List size={18} className="text-primary-500" />
-            Topic Contents
-          </h2>
-          <div className="space-y-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
-              >
-                <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center text-sm font-semibold text-primary-600 dark:text-primary-400">
-                  {i}
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Section {i}: Learning Module
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    ~{10 + i * 5} minutes
-                  </div>
-                </div>
+      <div className="max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-1">
+                <span className="text-primary-600 dark:text-primary-400 font-medium">{topicInfo.phaseTitle}</span>
               </div>
-            ))}
-          </div>
-        </div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{topicInfo.title}</h1>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${difficultyColors[content.difficulty]}`}>
+                  {content.difficulty}
+                </span>
+                <span className="flex items-center gap-1 text-xs text-gray-400">
+                  <Clock size={12} />
+                  {content.estimatedTime}
+                </span>
+                {phase && (
+                  <span className="text-xs text-gray-400">
+                    {phaseCompleted}/{phaseTotal} in phase · {phaseProgress}%
+                  </span>
+                )}
+                {content.tags.slice(0, 3).map((tag) => (
+                  <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-        <div className="flex items-center justify-between">
-          {prevTopic ? (
-            <button
-              onClick={() => navigate(`/topic/${prevTopic.id}`)}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-            >
-              <ArrowLeft size={16} />
-              {prevTopic.title}
-            </button>
-          ) : <div />}
-          {nextTopic ? (
-            <button
-              onClick={() => navigate(`/topic/${nextTopic.id}`)}
-              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-            >
-              {nextTopic.title}
-              <ArrowRight size={16} />
-            </button>
-          ) : <div />}
-        </div>
-      </motion.div>
-    </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={handleComplete}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  isCompleted
+                    ? 'bg-secondary-50 dark:bg-secondary-900/20 text-secondary-600 dark:text-secondary-400 border border-secondary-200 dark:border-secondary-800'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-secondary-500 border border-transparent hover:border-secondary-200 dark:hover:border-secondary-800'
+                }`}
+              >
+                {isCompleted ? <CheckCircle size={14} /> : <Circle size={14} />}
+                {isCompleted ? 'Completed' : 'Mark Complete'}
+              </button>
+              <button
+                onClick={() => toggleBookmark(topicId)}
+                className={`p-1.5 rounded-lg transition-all ${
+                  isBookmarked
+                    ? 'bg-accent-50 dark:bg-accent-900/20 text-accent-600'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-accent-500'
+                }`}
+              >
+                <Bookmark size={16} className={isBookmarked ? 'fill-accent-500' : ''} />
+              </button>
+              <button className="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 hover:text-primary-500 transition-colors">
+                <Share2 size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto">
+            {tabs.map((tab) => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-all shrink-0 ${
+                    activeTab === tab.id
+                      ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  }`}
+                >
+                  <Icon size={16} />
+                  {tab.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Tab Content */}
+          <AnimatePresence mode="wait">
+            {activeTab === 'theory' && (
+              <TheoryTab
+                key="theory"
+                theory={content.theory}
+                objectives={content.objectives}
+                prerequisites={content.prerequisites}
+              />
+            )}
+            {activeTab === 'understanding' && (
+              <UnderstandingTab
+                key="understanding"
+                analogy={content.understanding.analogy}
+                steps={content.understanding.steps}
+                misconceptions={content.understanding.misconceptions}
+                comparisons={content.understanding.comparisons}
+              />
+            )}
+            {activeTab === 'code' && (
+              <CodeTab
+                key="code"
+                examples={content.codeExamples}
+              />
+            )}
+            {activeTab === 'real-world' && (
+              <RealWorldTab
+                key="real-world"
+                useCases={content.realWorld.useCases}
+                caseStudy={content.realWorld.caseStudy}
+                bestPractices={content.realWorld.bestPractices}
+                tools={content.realWorld.tools}
+                jobRoles={content.realWorld.jobRoles}
+                furtherReading={content.realWorld.furtherReading}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* Bottom Actions */}
+          <div className="mt-10 space-y-4">
+            {isCompleted && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-center"
+              >
+                <button
+                  onClick={() => setShowQuiz(true)}
+                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl hover:from-primary-600 hover:to-accent-600 transition-all text-sm font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                >
+                  <HelpCircle size={16} />
+                  Take Quiz
+                  <Sparkles size={14} />
+                </button>
+              </motion.div>
+            )}
+
+            {justCompleted && nextTopic && (
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 rounded-xl bg-gradient-to-r from-secondary-50 to-green-50 dark:from-secondary-900/20 dark:to-green-900/20 border border-secondary-200 dark:border-secondary-800"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles size={18} className="text-secondary-500" />
+                    <span className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
+                      Great job! Ready for the next topic?
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setCurrentTopic(nextTopic.id)
+                      navigate(`/topic/${nextTopic.id}`)
+                    }}
+                    className="flex items-center gap-1.5 px-4 py-1.5 bg-secondary-500 text-white rounded-lg hover:bg-secondary-600 transition-colors text-sm font-semibold"
+                  >
+                    {nextTopic.title}
+                    <ArrowRight size={14} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Previous / Next */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
+              {prevTopic ? (
+                <button
+                  onClick={() => {
+                    setCurrentTopic(prevTopic.id)
+                    navigate(`/topic/${prevTopic.id}`)
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                >
+                  <ArrowLeft size={16} className="group-hover:-translate-x-0.5 transition-transform" />
+                  <span className="hidden sm:inline truncate max-w-[200px]">{prevTopic.title}</span>
+                </button>
+              ) : <div />}
+              {nextTopic ? (
+                <button
+                  onClick={() => {
+                    setCurrentTopic(nextTopic.id)
+                    navigate(`/topic/${nextTopic.id}`)
+                  }}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors group"
+                >
+                  <span className="hidden sm:inline truncate max-w-[200px]">{nextTopic.title}</span>
+                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              ) : <div />}
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </>
   )
 }

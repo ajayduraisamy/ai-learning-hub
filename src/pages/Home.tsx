@@ -4,9 +4,9 @@ import { motion, useInView, animate } from 'framer-motion'
 import {
   Brain, BookOpen, BarChart3, Sparkles, MessageSquare, Bot,
   Eye, Text, Cloud, ChevronRight, Lock, CheckCircle, Clock,
-  ArrowRight, GraduationCap, Github, Heart, Code2, Layers,
-  Award, Target, TrendingUp, Cpu, Network, Globe, Zap,
-  PlayCircle, BookmarkCheck, Menu
+  ArrowRight, GraduationCap, Heart, Code2, Layers,
+  Award, Target, TrendingUp, Cpu, Network, Zap,
+  PlayCircle, BookmarkCheck, Menu, ExternalLink
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases } from '@/data/sidebarData'
@@ -69,7 +69,7 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
 }
 
 export default function Home() {
@@ -471,7 +471,7 @@ export default function Home() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featuredTopics.map((topic, i) => (
+          {featuredTopics.map((topic) => (
             <motion.button
               key={topic.id}
               variants={itemVariants}
@@ -550,7 +550,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               >
-                <Github size={16} />
+                <ExternalLink size={16} />
                 GitHub
               </a>
               <a

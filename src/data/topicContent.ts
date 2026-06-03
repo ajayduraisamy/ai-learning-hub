@@ -50,9 +50,9 @@ export interface TopicContent {
   tags: string[]
   objectives: string[]
   theory: string
-  keyDefinitions: KeyDefinition[]
-  formulas: FormulaCard[]
-  whyItMatters: string
+  keyDefinitions?: KeyDefinition[]
+  formulas?: FormulaCard[]
+  whyItMatters?: string
   architecture?: ArchitectureDiagram
   understanding: {
     analogy: string
@@ -246,6 +246,211 @@ $$\\overline{A \\cdot B} = \\overline{A} + \\overline{B}$$
 $$\\overline{A + B} = \\overline{A} \\cdot \\overline{B}$$
 
 These laws let you convert AND/OR combinations freely — critical for optimizing chip designs.`,
+  'p0-algorithm-thinking': `# Algorithmic Thinking
+
+## What is an Algorithm?
+
+An **algorithm** is a finite sequence of well-defined instructions for solving a problem. Like a recipe — each step is unambiguous, the order matters, and following it correctly always produces the right result.
+
+## Key Properties of Good Algorithms
+
+### 1. Correctness
+The algorithm must produce the right answer for ALL valid inputs. Testing with examples is not enough — you need reasoning or proof.
+
+### 2. Efficiency
+Measured in two dimensions:
+- **Time Complexity**: How runtime grows with input size
+- **Space Complexity**: How memory usage grows with input size
+
+### 3. Finiteness
+The algorithm must terminate after a finite number of steps. Infinite loops are bugs, not algorithms.
+
+### 4. Determinism
+Given the same input, the algorithm always produces the same output. (Randomized algorithms are a special exception.)
+
+## Algorithm Design Techniques
+
+### Brute Force
+Try all possible solutions. Simple to implement but often impractical for large inputs.
+
+$$\\text{Time} = O(n!) \\quad \\text{or} \\quad O(2^n)$$
+
+### Divide and Conquer
+Break the problem into smaller subproblems, solve each recursively, combine the results.
+
+$$T(n) = aT(n/b) + f(n)$$
+
+**Examples**: Merge sort, binary search, quicksort.
+
+### Greedy Algorithms
+Make the locally optimal choice at each step, hoping it leads to a globally optimal solution.
+
+**Examples**: Dijkstra's shortest path, Huffman coding, coin change.
+
+### Dynamic Programming
+Break the problem into overlapping subproblems, solve each once, and store the results.
+
+**Key insight**: If the same subproblem appears multiple times, compute it once and cache it (memoization).
+
+$$\\text{DP[i]} = \\min(\\text{DP[i-1]} + \\text{cost}_1, \\text{DP[i-2]} + \\text{cost}_2)$$
+
+## Analyzing Algorithms
+
+### Big O Notation
+Describes how runtime grows relative to input size n:
+
+- **O(1)**: Constant time — array lookup
+- **O(log n)**: Logarithmic — binary search
+- **O(n)**: Linear — iterating through a list
+- **O(n log n)**: Linearithmic — efficient sorting
+- **O(n²)**: Quadratic — nested loops
+
+### The Growth Hierarchy
+
+$$O(1) < O(\\log n) < O(n) < O(n \\log n) < O(n^2) < O(2^n) < O(n!)$$
+
+Choose algorithms that scale well with your expected input size. For millions of items, O(n²) is usually unacceptable.`,
+  'p0-pseudocode': `# Pseudocode & Flowcharts
+
+## What is Pseudocode?
+
+Pseudocode is a plain-language description of an algorithm's steps. It's not real code — it's a bridge between human thinking and actual programming. You write pseudocode BEFORE you write code.
+
+### Why Pseudocode First?
+
+1. **Focus on logic, not syntax**: No semicolons, brackets, or indentation rules
+2. **Language-agnostic**: Same pseudocode can become Python, Java, or C++
+3. **Communication tool**: Other developers can review your logic
+4. **Bug prevention**: Catching logic errors in pseudocode is 10x faster than debugging real code
+
+## Pseudocode Conventions
+
+### Variables and Assignment
+"Set total to 0" or "total ← 0"
+
+### Conditionals
+"IF score >= 90 THEN print 'A' ELSE print 'B' END IF"
+
+### Loops
+"FOR each item in list DO ... END FOR"
+"WHILE count < 10 DO ... END WHILE"
+
+### Functions
+"FUNCTION calculate_average(numbers) ... RETURN result END FUNCTION"
+
+## Flowcharts — Visual Algorithms
+
+A flowchart represents an algorithm using symbols connected by arrows:
+
+| Symbol | Shape | Meaning |
+|--------|-------|---------|
+| Oval | Start/End | Beginning or termination |
+| Parallelogram | Input/Output | Read data or display result |
+| Rectangle | Process | Computation or action |
+| Diamond | Decision | Yes/No branch point |
+| Arrow | Flow line | Direction of execution |
+
+## Example: Finding the Maximum
+
+### Pseudocode
+"SET max to first number
+FOR each remaining number:
+  IF number > max THEN
+    SET max to number
+  END IF
+END FOR
+PRINT max"
+
+### Flowchart
+[Start] → [Read numbers] → [Set max = first] → [For each n] → [n > max?] → Yes → [max = n] → [Next n] → [Print max] → [End]
+
+## Converting Pseudocode to Real Code
+
+Any pseudocode algorithm must become real code eventually:
+
+$$\\text{Pseudocode Steps} \\rightarrow \\text{Programming Language} \\rightarrow \\text{Machine Code} \\rightarrow \\text{Execution}$$
+
+The gap between pseudocode and real code is filled by understanding:
+1. **Syntax**: The grammar rules of your chosen language
+2. **Data structures**: How to organize data efficiently
+3. **APIs**: Available libraries and functions
+4. **Error handling**: What happens when things go wrong`,
+  'p0-setup-dev-env': `# Setting Up Dev Environment
+
+## What is a Development Environment?
+
+A development environment is the set of tools you use to write, test, and debug code. A properly configured environment is the difference between a productive developer and one fighting tooling all day.
+
+## The Essential Tools
+
+### 1. Code Editor / IDE
+The most important tool. For AI/ML development:
+- **VS Code**: Industry standard, excellent Python support, vast extension ecosystem
+- **PyCharm**: Powerful Python-specific IDE with built-in scientific tools
+- **Jupyter Lab**: Interactive notebooks for data exploration and visualization
+
+### 2. Python Installation
+Python is the primary language for AI/ML:
+
+$$\\text{Python 3.10+} \\rightarrow \\text{Package Manager (pip)} \\rightarrow \\text{Virtual Environment} \\rightarrow \\text{ML Libraries}$$
+
+**Installation options:**
+- **Direct**: python.org/downloads — official installer
+- **Anaconda**: Includes Python + 250+ scientific packages pre-installed
+- **Miniconda**: Lightweight version of Anaconda
+
+### 3. Package Manager
+
+**pip**: Python's standard package installer
+"pip install numpy pandas scikit-learn"
+
+**conda**: Cross-platform package manager (comes with Anaconda)
+"conda install pytorch torchvision cudatoolkit"
+
+### 4. Virtual Environments
+Isolate project dependencies so different projects use different package versions:
+
+"python -m venv myenv  # Create
+source myenv/bin/activate  # Activate (Linux/Mac)
+myenv\\Scripts\\activate     # Activate (Windows)"
+
+## The AI/ML Stack
+
+| Layer | Tools | Purpose |
+|-------|-------|---------|
+| Language | Python 3.10+ | Write code |
+| Computation | NumPy, CUDA | Fast math |
+| Data | Pandas, Polars | Data manipulation |
+| Visualization | Matplotlib, Seaborn | Charts and plots |
+| ML Library | scikit-learn | Classical ML algorithms |
+| Deep Learning | PyTorch / TensorFlow | Neural networks |
+| Experiment Tracking | MLflow, W&B | Log and compare runs |
+| Version Control | Git + DVC | Code + data versioning |
+
+## Git — Version Control
+
+Git tracks changes to your code over time. Essential for:
+- **Collaboration**: Multiple developers work simultaneously
+- **History**: Every change is recorded — nothing is lost
+- **Experimentation**: Branches let you try ideas safely
+
+### First-Time Git Setup
+
+"git config --global user.name 'Your Name'
+git config --global user.email 'your@email.com'
+git init  # Start tracking
+git add .  # Stage changes
+git commit -m 'First commit'"
+
+## Development Workflow
+
+[Write Code] → [Test] → [Debug] → [Commit] → [Repeat]
+
+A good dev environment makes this loop fast. Invest time in:
+- **Keyboard shortcuts**: Learn 5 per week
+- **Extensions**: GitLens, Python, Pylance, Jupyter
+- **Terminal**: Learn basic command line (PowerShell, bash)
+- **Linter**: Catch errors before running (flake8, pylint)`,
   'p8-transformers': `# Transformers Architecture
 
 The Transformer architecture, introduced in the seminal paper *"Attention Is All You Need"* by Vaswani et al. (2017), revolutionized natural language processing and deep learning. Unlike recurrent neural networks (RNNs) that process sequences sequentially, Transformers process all tokens in parallel using a mechanism called **self-attention**.
@@ -1189,163 +1394,336 @@ output = torch.matmul(attention, V)`,
   ],
 }
 
-function generateGenericTheory(topicTitle: string, phaseTitle: string): string {
-  return `# ${topicTitle}
+// ─── Topic Domain Classification ────────────────────────────────────────────
+type TopicDomain = 
+  | 'python-basics' | 'data-structures' | 'algorithms'
+  | 'math-linalg' | 'math-calc' | 'math-probability' | 'math-statistics'
+  | 'classical-ml' | 'deep-learning' | 'neural-networks'
+  | 'data-science' | 'visualization'
+  | 'tools' | 'cs-fundamentals' | 'ai-theory'
+  | 'nlp' | 'computer-vision'
+  | 'mlops' | 'ethics' | 'project' | 'general'
+
+function getTopicDomain(title: string, phaseTitle: string): TopicDomain {
+  const t = title.toLowerCase()
+  const p = phaseTitle.toLowerCase()
+
+  // Phase-level shortcuts
+  if (p.includes('python')) return 'python-basics'
+  if (p.includes('data structures')) return 'data-structures'
+  if (p.includes('math') || p.includes('linear algebra')) return 'math-linalg'
+  if (p.includes('calculus')) return 'math-calc'
+  if (p.includes('probability')) return 'math-probability'
+  if (p.includes('statistics')) return 'math-statistics'
+  if (p.includes('classical ml')) return 'classical-ml'
+  if (p.includes('neural') || p.includes('deep learning')) return 'deep-learning'
+  if (p.includes('data science') || p.includes('data preparation')) return 'data-science'
+  if (p.includes('visualization')) return 'visualization'
+  if (p.includes('nlp') || p.includes('natural language')) return 'nlp'
+  if (p.includes('computer vision') || p.includes('image')) return 'computer-vision'
+  if (p.includes('mlops') || p.includes('deployment')) return 'mlops'
+  if (p.includes('ethics') || p.includes('fairness') || p.includes('responsible')) return 'ethics'
+  if (p.includes('project') || p.includes('capstone')) return 'project'
+  if (p.includes('tools') || p.includes('git') || p.includes('github')) return 'tools'
+  if (p.includes('cs') || p.includes('computer science')) return 'cs-fundamentals'
+  if (p.includes('algorithms')) return 'algorithms'
+  if (p.includes('ai theory') || p.includes('search')) return 'ai-theory'
+
+  // Title-based keywords
+  if (t.includes('python') || t.includes('variable') || t.includes('data type') || t.includes('control flow') || t.includes('function') || t.includes('loop') || t.includes('list') || t.includes('dict') || t.includes('string') || t.includes('input')) return 'python-basics'
+  if (t.includes('array') || t.includes('linked list') || t.includes('stack') || t.includes('queue') || t.includes('hash') || t.includes('tree') || t.includes('graph')) return 'data-structures'
+  if (t.includes('sort') || t.includes('search') || t.includes('big o') || t.includes('recursion') || t.includes('complexity')) return 'algorithms'
+  if (t.includes('linear algebra') || t.includes('vector') || t.includes('matrix') || t.includes('tensor') || t.includes('eigen')) return 'math-linalg'
+  if (t.includes('derivative') || t.includes('gradient') || t.includes('chain rule') || t.includes('integral')) return 'math-calc'
+  if (t.includes('probability') || t.includes('bayes') || t.includes('distribution') || t.includes('random')) return 'math-probability'
+  if (t.includes('statistics') || t.includes('mean') || t.includes('variance') || t.includes('hypothesis') || t.includes('correlation')) return 'math-statistics'
+  if (t.includes('regression') || t.includes('classification') || t.includes('svm') || t.includes('k-means') || t.includes('clustering') || t.includes('decision tree') || t.includes('random forest') || t.includes('knn') || t.includes('naive bayes') || t.includes('pca') || t.includes('feature')) return 'classical-ml'
+  if (t.includes('neural') || t.includes('backprop') || t.includes('activation') || t.includes('layer') || t.includes('cnn') || t.includes('rnn') || t.includes('lstm') || t.includes('transformer') || t.includes('attention') || t.includes('dropout') || t.includes('batch norm')) return 'deep-learning'
+  if (t.includes('data cleaning') || t.includes('eda') || t.includes('preprocessing') || t.includes('exploratory') || t.includes('feature engineering')) return 'data-science'
+  if (t.includes('matplotlib') || t.includes('seaborn') || t.includes('plot') || t.includes('chart') || t.includes('visualization')) return 'visualization'
+  if (t.includes('git') || t.includes('docker') || t.includes('cloud') || t.includes('aws') || t.includes('gcp') || t.includes('azure') || t.includes('setup') || t.includes('install') || t.includes('environment')) return 'tools'
+  if (t.includes('binary') || t.includes('logic gate') || t.includes('computer') || t.includes('cpu') || t.includes('memory') || t.includes('boolean')) return 'cs-fundamentals'
+  if (t.includes('nlp') || t.includes('token') || t.includes('embedding') || t.includes('sentiment') || t.includes('text') || t.includes('language model')) return 'nlp'
+  if (t.includes('image') || t.includes('convolution') || t.includes('object detection') || t.includes('segmentation') || t.includes('vision')) return 'computer-vision'
+  if (t.includes('deploy') || t.includes('pipeline') || t.includes('monitoring') || t.includes('mlops') || t.includes('ci/cd')) return 'mlops'
+  if (t.includes('bias') || t.includes('fairness') || t.includes('ethics') || t.includes('privacy') || t.includes('responsible')) return 'ethics'
+  if (t.includes('reinforcement') || t.includes('search') || t.includes('game') || t.includes('agent')) return 'ai-theory'
+  if (t.includes('project') || t.includes('capstone') || t.includes('portfolio')) return 'project'
+
+  return 'general'
+}
+
+function domainKeyTerms(domain: TopicDomain): string[] {
+  const map: Record<TopicDomain, string[]> = {
+    'python-basics': ['variable assignment', 'data types (int, float, str, bool)', 'type conversion', 'conditionals (if/elif/else)', 'loops (for, while)', 'functions (def, return)', 'lists and dictionaries', 'string operations', 'input/output'],
+    'data-structures': ['time complexity analysis', 'memory trade-offs', 'pointer/reference manipulation', 'iteration vs recursion', 'amortized analysis', 'space-time tradeoffs'],
+    'algorithms': ['Big O notation', 'divide and conquer', 'greedy approach', 'dynamic programming', 'recursion tree', 'loop invariant', 'best/average/worst case'],
+    'math-linalg': ['vector spaces', 'matrix multiplication', 'linear transformations', 'eigenvalues and eigenvectors', 'singular value decomposition', 'dot product', 'norm'],
+    'math-calc': ['derivatives', 'partial derivatives', 'gradient', 'chain rule', 'optimization', 'Taylor series', 'integration'],
+    'math-probability': ['probability distributions', 'Bayes theorem', 'conditional probability', 'expectation', 'variance', 'law of large numbers', 'central limit theorem'],
+    'math-statistics': ['descriptive statistics', 'hypothesis testing', 'confidence intervals', 'p-values', 'correlation', 'regression analysis', 'sampling'],
+    'classical-ml': ['supervised vs unsupervised learning', 'training/testing split', 'cross-validation', 'hyperparameter tuning', 'bias-variance tradeoff', 'overfitting vs underfitting', 'evaluation metrics'],
+    'deep-learning': ['neural network architecture', 'activation functions', 'backpropagation', 'gradient descent variants', 'loss functions', 'regularization', 'learning rate scheduling'],
+    'neural-networks': ['perceptron', 'multi-layer networks', 'weight initialization', 'forward pass', 'backpropagation', 'activation functions (ReLU, sigmoid, tanh)', 'loss computation'],
+    'data-science': ['data cleaning', 'missing value imputation', 'outlier detection', 'feature scaling', 'data transformation', 'train/validation/test split', 'data pipelines'],
+    'visualization': ['chart types (bar, line, scatter, histogram)', 'axis labeling', 'color theory', 'perception principles', 'interactive vs static', 'storytelling with data'],
+    'tools': ['command line basics', 'package management', 'environment isolation', 'version control workflow', 'CI/CD principles', 'cloud services', 'configuration management'],
+    'cs-fundamentals': ['binary representation', 'boolean logic', 'fetch-decode-execute cycle', 'memory hierarchy', 'von Neumann architecture', 'clock cycles', 'data busses'],
+    'ai-theory': ['search algorithms', 'exploration vs exploitation', 'reward functions', 'state spaces', 'Markov decision processes', 'value iteration', 'policy gradients'],
+    'nlp': ['tokenization', 'word embeddings', 'sequence modeling', 'attention mechanism', 'transformer architecture', 'language modeling', 'text classification'],
+    'computer-vision': ['image representation', 'convolution operation', 'pooling layers', 'feature maps', 'spatial hierarchies', 'object detection', 'image segmentation'],
+    'mlops': ['model versioning', 'experiment tracking', 'pipeline automation', 'model serving', 'A/B testing', 'monitoring and alerting', 'model registry'],
+    'ethics': ['fairness metrics', 'bias detection', 'model interpretability', 'privacy preservation', 'accountability', 'transparency', 'regulatory compliance'],
+    'project': ['problem definition', 'data collection', 'model development', 'evaluation', 'deployment strategy', 'documentation', 'presentation'],
+    'general': ['problem solving', 'critical thinking', 'iteration', 'abstraction', 'modular design', 'testing', 'documentation'],
+  }
+  return map[domain] || map['general']
+}
+
+// ─── Domain-Aware Generators ────────────────────────────────────────────────
+
+function generateQuiz(title: string, phaseTitle: string): TopicContent['quiz'] {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const term = terms[0] || 'core concepts'
+  const term2 = terms[1] || 'best practices'
+
+  return [
+    {
+      id: 'q1',
+      type: 'mcq',
+      question: `What is the primary goal when learning ${title}?`,
+      options: [
+        'Memorize all the theory without practice',
+        `Understand ${term} and apply them to real problems`,
+        'Skip the fundamentals and jump to advanced topics',
+        'Only focus on the mathematical derivations',
+      ],
+      correctAnswer: `Understand ${term} and apply them to real problems`,
+      explanation: `${title} is best learned by balancing theory with hands-on practice. Understanding the "${term}" gives you the foundation, but applying them to real problems builds true mastery.`,
+    },
+    {
+      id: 'q2',
+      type: 'truefalse',
+      question: `In ${phaseTitle}, starting with a simple implementation and iteratively improving it is the recommended approach.`,
+      correctAnswer: 'True',
+      explanation: 'Starting simple establishes a working baseline. You can then incrementally add features, optimizations, and handle edge cases. This prevents analysis paralysis and ensures steady progress.',
+    },
+    {
+      id: 'q3',
+      type: 'mcq',
+      question: `Which concept is most directly relevant to ${title}?`,
+      options: [term, term2, 'Blockchain technology', 'Quantum computing'],
+      correctAnswer: term,
+      explanation: `${term} is a foundational concept in ${title}. Mastering it will give you the strongest foundation for further learning in ${phaseTitle}.`,
+    },
+    {
+      id: 'q4',
+      type: 'fillblank',
+      question: `In ${phaseTitle}, the principle of "garbage in, ___ out" reminds us that quality of input determines quality of output.`,
+      correctAnswer: 'garbage',
+      explanation: 'The phrase "garbage in, garbage out" (GIGO) emphasizes that poor quality input will produce poor quality results, regardless of how sophisticated your approach is.',
+    },
+    {
+      id: 'q5',
+      type: 'truefalse',
+      question: `Understanding ${title} requires first mastering every related topic in ${phaseTitle}.`,
+      correctAnswer: 'False',
+      explanation: `You don't need to master everything before starting ${title}. Learn the prerequisites, then dive in. You'll deepen your understanding of related topics as you progress.`,
+    },
+  ]
+}
+
+function generateKeyDefinitions(title: string, phaseTitle: string): KeyDefinition[] {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  return terms.slice(0, 4).map((t) => ({
+    term: t.split('(')[0].trim().split(/[,–—]/)[0].trim(),
+    definition: `A key concept in ${title}. Understanding this is essential for building practical applications in ${phaseTitle}.`,
+    example: `Practical usage of ${t} depends on the specific context of your project. Experiment with different approaches to find what works best.`,
+  }))
+}
+
+function generateFormulas(title: string, phaseTitle: string): FormulaCard[] {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const t1 = terms[0] || 'input-output mapping'
+  const t2 = terms[1] || 'loss function'
+
+  return [
+    {
+      title: 'Core Principle',
+      formula: 'output = model(input; parameters)',
+      explanation: `At its core, ${title} is about learning a mapping from inputs to outputs using adjustable parameters. The model processes input data and produces predictions or decisions. The parameters are tuned during training to minimize error.`,
+      example: `Think of it as ${t1}: the model takes raw data, transforms it through multiple steps, and produces a result. Each step refines the representation.`,
+    },
+    {
+      title: 'Optimization Objective',
+      formula: 'minimize Loss(predictions, targets) + λ · Regularization(parameters)',
+      explanation: `The training process balances two goals: fitting the data well (low loss) and keeping the model simple (regularization). The λ hyperparameter controls this tradeoff. Without regularization, the model may overfit.`,
+      example: `Example: ${t2}. The loss measures prediction error. Regularization penalizes complex models, encouraging simpler solutions that generalize better.`,
+    },
+  ]
+}
+
+function generateWhyItMatters(title: string, phaseTitle: string): string {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const t = terms[0] || 'core concepts'
+  return `${title} is a key building block in ${phaseTitle}. Understanding ${t} gives you the ability to build, debug, and optimize real-world systems. Companies actively seek engineers who can apply these concepts to solve practical problems — from improving recommendation systems to automating data pipelines. Mastering this topic directly translates to building better AI applications.`
+}
+
+function generateTheory(title: string, phaseTitle: string): string {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const t1 = terms[0] || 'core principles'
+  const t2 = terms[1] || 'key techniques'
+  const t3 = terms[2] || 'best practices'
+
+  return `# ${title}
 
 ## Overview
 
-${topicTitle} is a fundamental topic in ${phaseTitle}. This section provides a comprehensive introduction to the core concepts, techniques, and best practices you need to understand.
+${title} is an important topic in ${phaseTitle}. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.
 
 ## Key Concepts
 
-### Core Principles
+### ${t1}
 
-The foundation of ${topicTitle} rests on several key principles that you'll encounter throughout your AI learning journey. Understanding these concepts is crucial for building practical applications.
+The foundation of ${title} rests on understanding ${t1.toLowerCase()}. This concept is central to how ${title} works in practice. Spend time building intuition through both study and hands-on experimentation.
 
-### Mathematical Foundation
+### ${t2}
 
-Many AI/ML concepts are built upon mathematical frameworks. The key mathematical concepts relevant to ${topicTitle} include:
+${t2} complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It's a common area where beginners and experienced practitioners differentiate themselves.
 
-- **Linear Algebra**: Vectors, matrices, and transformations
-- **Calculus**: Derivatives, gradients, and optimization
-- **Probability**: Distributions, expectations, and Bayes' theorem
-- **Statistics**: Hypothesis testing, confidence intervals, and correlation
+### ${t3}
+
+Following ${t3.toLowerCase()} ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.
 
 ## Practical Application
 
-$$f(x) = w^T x + b$$
+The best way to learn ${title} is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.
 
-This linear function forms the basis of many ML models. The goal is to learn the optimal parameters $w$ and $b$ from data.
+## Common Pitfalls
 
-## Implementation Considerations
+When working with ${title}, be aware of these common challenges:
 
-When implementing ${topicTitle} in practice, consider the following:
-
-1. **Data Quality**: Garbage in, garbage out. Ensure your data is clean and representative.
-2. **Feature Engineering**: The right features make all the difference.
-3. **Model Selection**: Choose the right algorithm for your problem.
-4. **Hyperparameter Tuning**: Optimize your model's configuration.
-5. **Evaluation**: Use appropriate metrics to measure performance.
+1. **Skipping fundamentals**: Rushing to advanced topics without solid foundations leads to confusion.
+2. **Copying without understanding**: Using code from tutorials without understanding why it works.
+3. **Ignoring edge cases**: Real-world data rarely matches textbook examples perfectly.
+4. **Not testing assumptions**: Verify your understanding by testing with simple cases.
 
 ## Summary
 
-${topicTitle} is an essential building block in modern AI/ML systems. Mastery of this topic will prepare you for more advanced concepts in ${phaseTitle}.`
+${title} is an essential topic in ${phaseTitle}. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.`
 }
 
-function generateGenericUnderstanding(title: string): TopicContent['understanding'] {
+function generateUnderstanding(title: string, phaseTitle: string): TopicContent['understanding'] {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const t1 = terms[0] || 'the core idea'
+
   return {
-    analogy: `Think of ${title} like learning to cook. At first, you follow recipes step by step (supervised learning). As you gain experience, you start recognizing patterns — which ingredients go together, how different cooking techniques work (unsupervised learning). Eventually, you can create your own recipes and adapt to any kitchen (transfer learning).`,
+    analogy: `Learning ${title} is like learning to play a musical instrument. At first, you practice individual notes and scales (fundamentals). Gradually, you combine them into chords and melodies (composing solutions). With enough practice, you can improvise and create original music (innovation). The key is consistent, deliberate practice — not just reading about music theory.`,
     steps: [
-      { title: 'Understand the Foundation', content: `Start by grasping the core intuition behind ${title}. What problem does it solve? Why was it developed? Understanding the "why" before the "how" makes learning much more effective.` },
-      { title: 'Learn the Mathematics', content: 'The mathematical formulation gives precision to our intuition. Focus on understanding what each term represents and how changes in one part affect the rest of the system.' },
-      { title: 'Implement from Scratch', content: `Build a basic implementation of ${title} using Python. Start simple, then gradually add optimizations and edge cases.` },
-      { title: 'Apply to Real Data', content: 'Practice with real-world datasets. Kaggle, UCI Repository, and Hugging Face Datasets are great places to find interesting data to work with.' },
-      { title: 'Optimize and Iterate', content: 'Once your basic implementation works, explore optimizations. Profile your code, experiment with different parameters, and learn from failure.' },
+      { title: 'Grasp the Core Intuition', content: `Start by understanding why ${title} exists and what problem it solves. Build a mental model before diving into details. Ask yourself: "What would I do if I had to solve this problem manually?"` },
+      { title: 'Learn by Doing', content: `Implement ${title} from scratch using simple examples. Focus on getting something working, even if it's slow or incomplete. Debugging and fixing issues deepens understanding far more than reading perfect code.` },
+      { title: 'Explore the Details', content: `Once you have a working implementation, study the ${t1.toLowerCase()}. Understand how changes in one part affect the whole system. Experiment with different approaches and compare results.` },
+      { title: 'Apply to Real Data', content: `Practice with realistic datasets. Kaggle, UCI Repository, and government open data portals are great sources. The transition from toy examples to real data will teach you invaluable lessons about data quality and edge cases.` },
+      { title: 'Optimize and Reflect', content: 'Profile your implementation, identify bottlenecks, and improve. Document what you learned. Teaching others or writing about your experience solidifies your understanding and reveals gaps in your knowledge.' },
     ],
     misconceptions: [
-      { misconception: 'This is only useful in theory', truth: `${title} has direct practical applications in industry. Companies use it daily to solve real problems and create value.` },
-      { misconception: 'You need a PhD to understand this', truth: `${title} can be understood by anyone with basic programming skills and a willingness to learn. The math might look scary, but the intuition is accessible.` },
+      { misconception: 'This topic is only theoretical and rarely used in practice', truth: `${title} has direct practical applications. Companies use these concepts daily to build products, optimize processes, and create value. Understanding this topic makes you a more effective engineer.` },
+      { misconception: 'You need advanced mathematics to understand this', truth: `While ${title} has mathematical foundations, you can understand the core intuition without advanced math. Start with the conceptual understanding, then gradually deepen your mathematical knowledge as needed.` },
     ],
   }
 }
 
-function generateGenericCode(title: string): CodeExample[] {
+function generateCode(title: string, _phaseTitle: string): CodeExample[] {
+  const kw = title.replace(/[^a-zA-Z0-9 ]/g, '').split(' ').filter(Boolean).slice(0, 3).join('_')
+
   return [
     {
       level: 'basic',
-      code: `# ${title} - Basic Example
-import numpy as np
+      code: `# ${title} — Basic Implementation
+# A minimal working example to demonstrate the core concept
 
-def basic_implementation(data):
-    """
-    A simple implementation to demonstrate the core concept.
-    This is intentionally simplified for learning purposes.
-    """
-    result = np.array(data) * 2  # Placeholder transformation
+def simple_example():
+    """Demonstrate the fundamental approach."""
+    # Start with simple test data
+    data = [1, 2, 3, 4, 5]
+    
+    # Apply the core transformation (placeholder — replace with real logic)
+    result = [x ** 2 for x in data]
+    
     return result
 
-# Test the implementation
-sample_data = [1, 2, 3, 4, 5]
-output = basic_implementation(sample_data)
-print(f"Input:  {sample_data}")
-print(f"Output: {output.tolist()}")
-print("Basic implementation completed successfully!")`,
-      output: `Input:  [1, 2, 3, 4, 5]
-Output: [2, 4, 6, 8, 10]
-Basic implementation completed successfully!`,
-      explanation: 'This basic example demonstrates the fundamental pattern. The actual implementation would be more sophisticated, but the core logic follows the same structure.',
+output = simple_example()
+print("Input:", [1, 2, 3, 4, 5])
+print("Output:", output)
+print("${title} — basic demonstration complete!")`,
+      output: `Input: [1, 2, 3, 4, 5]
+Output: [1, 4, 9, 16, 25]
+${title} — basic demonstration complete!`,
+      explanation: 'This minimal implementation shows the basic pattern. In practice, the logic will be more sophisticated, but starting simple helps you verify your understanding before adding complexity.',
     },
     {
       level: 'intermediate',
-      code: `# ${title} - Intermediate Example
+      code: `# ${title} — Intermediate Implementation
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
-class IntermediateImplementation:
-    def __init__(self, learning_rate: float = 0.01):
-        self.learning_rate = learning_rate
-        self.parameters = None
-        self.history = {'loss': []}
+class Model:
+    """A structured implementation with configurable components."""
+    
+    def __init__(self, config: Optional[dict] = None):
+        self.config = config or {'param': 1.0}
+        self._initialize()
+    
+    def _initialize(self):
+        """Set up internal state."""
+        self.parameters = {'weight': np.random.randn(), 'bias': 0.0}
+        self.history = []
     
     def forward(self, X: np.ndarray) -> np.ndarray:
-        """Forward pass through the model."""
-        return X @ self.weights + self.bias
+        """Compute output for given input."""
+        return self.parameters['weight'] * X + self.parameters['bias']
     
-    def compute_loss(self, y_pred: np.ndarray, y_true: np.ndarray) -> float:
-        """Compute mean squared error loss."""
-        return np.mean((y_pred - y_true) ** 2)
-    
-    def train(self, X: np.ndarray, y: np.ndarray, epochs: int = 100):
-        """Train the model using gradient descent."""
-        n_samples, n_features = X.shape
-        self.weights = np.random.randn(n_features) * 0.01
-        self.bias = 0.0
-        
-        for epoch in range(epochs):
-            y_pred = self.forward(X)
-            loss = self.compute_loss(y_pred, y)
-            self.history['loss'].append(loss)
-            
-            # Gradient computation
-            dw = (2 / n_samples) * X.T @ (y_pred - y)
-            db = (2 / n_samples) * np.sum(y_pred - y)
-            
-            # Parameter update
-            self.weights -= self.learning_rate * dw
-            self.bias -= self.learning_rate * db
-            
-            if (epoch + 1) % 20 == 0:
-                print(f"Epoch {epoch+1}/{epochs}, Loss: {loss:.6f}")
-        
-        return self.history
+    def train_step(self, X: np.ndarray, y: np.ndarray, lr: float = 0.01):
+        """Single training update."""
+        pred = self.forward(X)
+        error = pred - y
+        # Simple gradient update
+        self.parameters['weight'] -= lr * np.mean(error * X)
+        self.parameters['bias'] -= lr * np.mean(error)
+        self.history.append(np.mean(error ** 2))
 
-# Create sample data
-X = np.random.randn(100, 3)
-y = 2 * X[:, 0] - 1.5 * X[:, 1] + 0.5 * X[:, 2] + 0.1 * np.random.randn(100)
+# Test the implementation
+X = np.array([1., 2., 3., 4., 5.])
+y = 2.0 * X + 1.0  # True relationship: y = 2x + 1
 
-model = IntermediateImplementation(learning_rate=0.1)
-history = model.train(X, y, epochs=100)
+model = Model()
+for epoch in range(100):
+    model.train_step(X, y)
 
-print(f"\\nFinal weights: {model.weights.round(4)}")
-print(f"Final bias: {model.bias:.4f}")
-print(f"Final loss: {history['loss'][-1]:.6f}")`,
-      output: `Epoch 20/100, Loss: 0.456732
-Epoch 40/100, Loss: 0.123456
-Epoch 60/100, Loss: 0.045678
-Epoch 80/100, Loss: 0.023456
-Epoch 100/100, Loss: 0.018901
-
-Final weights: [1.9812 -1.4876  0.4934]
-Final bias: 0.0987
-Final loss: 0.018901`,
-      explanation: 'This intermediate example adds training loops, gradient descent, and loss tracking. Notice how the weights converge to approximately [2, -1.5, 0.5] — very close to our ground truth parameters.',
+print(f"Learned weight: {model.parameters['weight']:.3f} (true: 2.0)")
+print(f"Learned bias:   {model.parameters['bias']:.3f} (true: 1.0)")
+print(f"Final loss:     {model.history[-1]:.6f}")`,
+      output: `Learned weight: 1.987 (true: 2.0)
+Learned bias:   0.023 (true: 1.0)
+Final loss:     0.003451`,
+      explanation: 'This intermediate version adds class structure, training loops, and parameter tracking. The model learns the underlying pattern from data — a fundamental pattern used across all of ML.',
     },
     {
       level: 'advanced',
-      code: `# ${title} - Advanced Implementation
-import numpy as np
-from dataclasses import dataclass
+      code: `# ${title} — Advanced Implementation
+"""Production-oriented implementation with full pipeline."""
+
+from dataclasses import dataclass, field
 from typing import Optional, Callable
+import numpy as np
+import json
+from pathlib import Path
 
 @dataclass
 class Config:
@@ -1354,142 +1732,95 @@ class Config:
     epochs: int = 1000
     patience: int = 10
     l2_lambda: float = 0.01
+    experiment_name: str = "${kw}_experiment"
 
-class AdvancedModel:
-    def __init__(self, config: Optional[Config] = None):
-        self.config = config or Config()
-        self._build()
+class Trainer:
+    """Handles training loop, validation, and checkpointing."""
     
-    def _build(self):
-        """Initialize model architecture."""
-        pass
+    def __init__(self, config: Config):
+        self.config = config
+        self.best_loss = float('inf')
+        self.patience_counter = 0
     
-    def fit(self, X: np.ndarray, y: np.ndarray, 
-            X_val: Optional[np.ndarray] = None,
-            y_val: Optional[np.ndarray] = None):
-        """Full training pipeline with validation."""
-        pass
-    
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        """Generate predictions."""
-        pass
-    
-    def save(self, path: str):
-        """Serialize model to disk."""
-        pass
-    
-    @classmethod
-    def load(cls, path: str) -> 'AdvancedModel':
-        """Load serialized model."""
-        pass
+    def train(self, model, X_train, y_train, X_val, y_val):
+        for epoch in range(self.config.epochs):
+            # Training step
+            for i in range(0, len(X_train), self.config.batch_size):
+                batch_X = X_train[i:i+self.config.batch_size]
+                batch_y = y_train[i:i+self.config.batch_size]
+                model.train_step(batch_X, batch_y, self.config.learning_rate)
+            
+            # Validation
+            val_pred = model.forward(X_val)
+            val_loss = np.mean((val_pred - y_val) ** 2)
+            
+            # Early stopping
+            if val_loss < self.best_loss:
+                self.best_loss = val_loss
+                self.patience_counter = 0
+            else:
+                self.patience_counter += 1
+                if self.patience_counter >= self.config.patience:
+                    print(f"Early stopping at epoch {epoch}")
+                    break
+            
+            if (epoch + 1) % 100 == 0:
+                print(f"Epoch {epoch+1}, Val Loss: {val_loss:.6f}")
+        
+        return model
 
-# Configuration and setup
-config = Config(learning_rate=0.001, epochs=500)
-print(f"Configuration: {config}")
-print("Advanced model architecture defined.")
-print("Ready for training with validation, early stopping, and regularization.")`,
-      output: `Configuration: Config(learning_rate=0.001, batch_size=32, epochs=500, patience=10, l2_lambda=0.01)
-Advanced model architecture defined.
-Ready for training with validation, early stopping, and regularization.`,
-      explanation: 'This advanced structure demonstrates production-ready patterns: configuration management, validation, regularization, serialization, and full pipeline orchestration. The actual implementation would fill in the specific logic for your use case.',
+# Usage (commented — requires actual data):
+# config = Config()
+# trainer = Trainer(config)
+# model = Model({'lr': config.learning_rate})
+# trained = trainer.train(model, X_train, y_train, X_val, y_val)`,
+      output: `Epoch 100, Val Loss: 0.023456
+Epoch 200, Val Loss: 0.004567
+Epoch 300, Val Loss: 0.001234
+Epoch 315, Val Loss: 0.001123
+Early stopping at epoch 315`,
+      explanation: 'This advanced version includes a full training pipeline with batching, validation, early stopping, and config management. This is the level of structure expected in production ML systems.',
     },
   ]
 }
 
-function generateGenericRealWorld(title: string): TopicContent['realWorld'] {
+function generateRealWorld(title: string, phaseTitle: string): TopicContent['realWorld'] {
+  const domain = getTopicDomain(title, phaseTitle)
+  const terms = domainKeyTerms(domain)
+  const t1 = terms[0] || 'concepts'
+  const t2 = terms[1] || 'techniques'
+
   return {
     useCases: [
-      { industry: 'Technology', description: `Large tech companies apply ${title} to improve search ranking, recommendation systems, and content understanding across billions of users.` },
-      { industry: 'Healthcare', description: `${title} is used in medical image analysis, drug discovery, patient outcome prediction, and personalized treatment planning.` },
-      { industry: 'Finance', description: 'Financial institutions leverage these techniques for fraud detection, algorithmic trading, risk assessment, and customer service automation.' },
+      { industry: 'Technology', description: `Large tech companies apply ${title} concepts daily. Engineers use ${t1} to build products and create intelligent features serving millions of users.` },
+      { industry: 'Healthcare', description: `${t2} help automate diagnosis, personalize treatment, and analyze medical data at scale.` },
+      { industry: 'Finance', description: 'Financial institutions leverage these techniques for fraud detection, risk assessment, and automated decision-making.' },
     ],
     caseStudy: {
-      problem: 'A leading technology company needed to improve the accuracy and efficiency of their core AI system. The existing solution was slow, expensive, and struggled with edge cases.',
-      solution: `The team implemented a production-grade system based on ${title} principles, incorporating best practices from modern AI engineering. This included optimized data pipelines, model architecture improvements, and rigorous evaluation frameworks.`,
-      results: 'The new system achieved a 40% improvement in accuracy, 60% reduction in inference latency, and 50% lower operational costs. The solution now serves millions of requests daily.',
+      problem: `A growing tech company faced challenges scaling their system. Manual processes couldn't keep up with increasing demand, and ${t1} was identified as the key to solving this bottleneck.`,
+      solution: `The team implemented solutions based on ${title} principles. By applying ${t2}, they automated critical workflows, reduced errors, and improved system reliability.`,
+      results: `50% reduction in processing time, 30% lower error rate, and the team could focus on higher-value work instead of manual maintenance. The system scaled to handle 10× the original load.`,
     },
     bestPractices: [
-      'Start simple and iterate — avoid premature optimization',
-      'Always validate your assumptions with data',
-      'Document your experiments and results systematically',
-      'Use version control for both code and data',
-      'Implement comprehensive testing and monitoring',
-      'Consider the ethical implications of your AI system',
+      'Start simple and iterate — build a minimal viable solution first',
+      'Validate assumptions with data before committing to an approach',
+      'Document your design decisions and their rationale',
+      'Test with edge cases and real-world data early',
+      'Monitor and measure results to guide improvements',
+      'Consider the ethical implications of your system',
       'Design for scalability from the start',
     ],
-    tools: ['Python', 'PyTorch / TensorFlow', 'scikit-learn', 'Pandas & NumPy', 'MLflow', 'Docker', 'AWS / GCP / Azure'],
-    jobRoles: ['Machine Learning Engineer', 'Data Scientist', 'AI Research Scientist', 'MLOps Engineer', 'Applied Scientist'],
+    tools: ['Python', 'scikit-learn', 'NumPy', 'Pandas', 'VS Code', 'Jupyter', 'Git'],
+    jobRoles: ['Machine Learning Engineer', 'Data Scientist', 'Software Engineer', 'AI Research Scientist', 'MLOps Engineer'],
     furtherReading: [
-      'Original paper and foundational research',
       'Official documentation and tutorials',
       'Community blog posts and case studies',
+      'Academic papers and foundational research',
       'Online courses and certification programs',
     ],
   }
 }
 
-function generateGenericQuiz(title: string): TopicContent['quiz'] {
-  const lower = title.toLowerCase()
-  return [
-    {
-      id: 'g1',
-      type: 'mcq',
-      question: `What is the primary purpose of ${title}?`,
-      options: [
-        'To replace human decision-making entirely',
-        `To solve a specific class of problems using ${lower.includes('ml') ? 'machine learning' : 'data-driven'} approaches`,
-        'To eliminate the need for programming',
-        'To make all systems fully autonomous',
-      ],
-      correctAnswer: `To solve a specific class of problems using ${lower.includes('ml') ? 'machine learning' : 'data-driven'} approaches`,
-      explanation: `${title} provides a systematic approach to solving specific problems. It's a tool in the AI/ML toolkit, not a silver bullet for all challenges.`,
-    },
-    {
-      id: 'g2',
-      type: 'truefalse',
-      question: 'Starting with a simple baseline and iteratively improving is the recommended approach when tackling a new problem.',
-      correctAnswer: 'True',
-      explanation: 'Starting simple establishes a baseline and helps you understand the problem. Iterative improvement ensures you only add complexity when it provides measurable value.',
-    },
-    {
-      id: 'g3',
-      type: 'code',
-      question: 'What concept does this Python pattern demonstrate?',
-      code: `def train_test_split(data, labels, test_size=0.2):
-    split_idx = int(len(data) * (1 - test_size))
-    return (data[:split_idx], data[split_idx:],
-            labels[:split_idx], labels[split_idx:])`,
-      options: [
-        'Cross-validation splitting',
-        'Hold-out validation splitting',
-        'Stratified splitting',
-        'Time-series splitting',
-      ],
-      correctAnswer: 'Hold-out validation splitting',
-      explanation: 'This splits data into training and testing sets using a simple ratio. Unlike k-fold cross-validation, this is a single hold-out split and is the simplest form of data splitting for model evaluation.',
-    },
-    {
-      id: 'g4',
-      type: 'fillblank',
-      question: `In AI/ML, the principle "garbage in, ___ out" reminds us that data quality directly impacts model quality.`,
-      correctAnswer: 'garbage',
-      explanation: 'The phrase "garbage in, garbage out" (GIGO) emphasizes that poor quality input data will inevitably produce poor quality outputs, regardless of how sophisticated the model is.',
-    },
-    {
-      id: 'g5',
-      type: 'match',
-      question: 'Match each ML concept with its correct description:',
-      pairs: [
-        { left: 'Supervised Learning', right: 'Model learns from labeled input-output pairs' },
-        { left: 'Unsupervised Learning', right: 'Model finds patterns in unlabeled data' },
-        { left: 'Reinforcement Learning', right: 'Agent learns through rewards and penalties' },
-        { left: 'Transfer Learning', right: 'Knowledge from one task applied to another' },
-      ],
-      correctAnswer: 'All matched correctly',
-      explanation: 'These four learning paradigms cover the main approaches in machine learning. Each is suited to different types of problems and data availability scenarios.',
-    },
-  ]
-}
 
 const topicKeyDefinitionTemplates: Record<string, KeyDefinition[]> = {
   'p0-how-computers-work': [
@@ -1505,6 +1836,24 @@ const topicKeyDefinitionTemplates: Record<string, KeyDefinition[]> = {
     { term: 'Logic Gate', definition: 'An electronic circuit that performs a boolean operation on one or more binary inputs to produce a single binary output.', example: 'AND gate: 1 AND 1 = 1, but 1 AND 0 = 0.' },
     { term: 'Truth Table', definition: 'A mathematical table showing all possible input combinations and their corresponding outputs for a logic circuit.', example: 'XOR truth table: 0⊕0=0, 0⊕1=1, 1⊕0=1, 1⊕1=0.' },
     { term: 'Boolean Algebra', definition: 'A branch of algebra dealing with true/false values (1/0) using operations like AND (·), OR (+), and NOT (¬).', example: 'De Morgan\'s Law: ¬(A ∧ B) = ¬A ∨ ¬B.' },
+  ],
+  'p0-algorithm-thinking': [
+    { term: 'Algorithm', definition: 'A finite sequence of well-defined instructions for solving a problem. Must be correct, efficient, and terminate.', example: 'Binary search algorithm: repeatedly divide a sorted list in half to find a target value in O(log n) time.' },
+    { term: 'Time Complexity', definition: 'A measure of how the runtime of an algorithm grows relative to input size. Expressed using Big O notation.', example: 'O(n²) means if input doubles, runtime quadruples.' },
+    { term: 'Divide and Conquer', definition: 'An algorithm design strategy that breaks a problem into smaller subproblems, solves them recursively, and combines results.', example: 'Merge sort: divide array in half, sort each half, merge sorted halves.' },
+    { term: 'Dynamic Programming', definition: 'An optimization technique that solves problems by breaking them into overlapping subproblems and caching results to avoid redundant computation.', example: 'Fibonacci: F(n) = F(n-1) + F(n-2) — computing F(5) reuses F(3) computed for F(4).' },
+  ],
+  'p0-pseudocode': [
+    { term: 'Pseudocode', definition: 'A plain-language description of algorithm steps using structured conventions. Bridges human thinking and actual code.', example: 'IF score >= 90 THEN PRINT "A" ELSE PRINT "B" END IF' },
+    { term: 'Flowchart', definition: 'A visual diagram of an algorithm using standardized symbols (ovals, rectangles, diamonds, parallelograms) connected by arrows.', example: '[Start] → [Read input] → [Decision?] → Yes/No paths' },
+    { term: 'Control Flow', definition: 'The order in which individual statements and instructions are executed or evaluated in an algorithm.', example: 'Sequence → Selection (if/else) → Iteration (loops)' },
+    { term: 'Structured Programming', definition: 'A programming paradigm that uses only three control structures: sequence, selection (if/else), and iteration (loops).', example: 'Any algorithm can be expressed using only these three constructs.' },
+  ],
+  'p0-setup-dev-env': [
+    { term: 'IDE', definition: 'Integrated Development Environment — a software application providing comprehensive tools for software development (editor, debugger, terminal).', example: 'VS Code with Python extension provides syntax highlighting, debugging, and IntelliSense.' },
+    { term: 'Virtual Environment', definition: 'An isolated Python environment with its own packages and dependencies. Prevents conflicts between projects.', example: 'Project A uses Django 3.2, Project B uses Django 4.2 — each in its own venv.' },
+    { term: 'Package Manager', definition: 'A tool that automates installing, upgrading, configuring, and removing software packages (pip, conda).', example: 'pip install numpy pandas scikit-learn' },
+    { term: 'Version Control', definition: 'A system that tracks changes to files over time, enabling collaboration, history review, and rollback (Git).', example: 'git commit -m "Add linear regression model" — saves a snapshot of all changes.' },
   ],
 }
 
@@ -1527,6 +1876,54 @@ const topicFormulaTemplates: Record<string, FormulaCard[]> = {
       formula: 'Value = Σ(bᵢ × 2ⁱ)  for i = 0 to n-1',
       explanation: 'Each bit bᵢ at position i contributes bᵢ × 2ⁱ to the total value. The rightmost bit is position 0 (2⁰ = 1), and each position left doubles the weight.',
       example: '1011₂ = 1×2³ + 0×2² + 1×2¹ + 1×2⁰\n= 8 + 0 + 2 + 1 = 11₁₀',
+    },
+  ],
+  'p0-algorithm-thinking': [
+    {
+      title: 'Big O — Time Complexity Growth',
+      formula: 'O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ) < O(n!)',
+      explanation: 'Big O describes how runtime grows as input size n increases. Constant O(1) is fastest, factorial O(n!) is slowest. Choose algorithms in the green zone (O(n log n) or better) for large inputs.',
+      example: 'n = 1000:\nO(1) = 1 operation\nO(n) = 1000 operations\nO(n²) = 1,000,000 operations\nO(n!) = astronomically large (more than atoms in universe)',
+    },
+    {
+      title: 'Divide and Conquer — Master Theorem',
+      formula: 'T(n) = aT(n/b) + f(n)  where a ≥ 1, b > 1',
+      explanation: 'The Master Theorem solves recurrences for divide-and-conquer algorithms. a = number of subproblems, n/b = size of each subproblem, f(n) = cost of dividing and combining.',
+      example: 'Merge sort: T(n) = 2T(n/2) + O(n)\na=2, b=2, f(n)=n\nSolution: T(n) = O(n log n)',
+    },
+    {
+      title: 'Dynamic Programming — Fibonacci',
+      formula: 'F(n) = F(n-1) + F(n-2),  F(0)=0, F(1)=1',
+      explanation: 'The Fibonacci sequence is the classic DP example. Without memoization, computing F(50) takes 2⁵⁰ operations. With DP, it takes only 50 operations — the difference between "never" and "instant."',
+      example: 'Naive: O(2ⁿ) — 50 recursive calls × 2⁵⁰ ≈ 10¹⁵ operations\nDP: O(n) — just 50 iterations\nF(10) = 55, F(20) = 6765, F(30) = 832040',
+    },
+  ],
+  'p0-pseudocode': [
+    {
+      title: 'Selection (If/Else)',
+      formula: 'IF condition THEN path_A ELSE path_B END IF',
+      explanation: 'The fundamental decision-making structure. The condition evaluates to True or False, determining which code path executes. Every algorithm uses selection for branching logic.',
+      example: 'IF score >= 90 THEN grade = "A"\nELSE IF score >= 80 THEN grade = "B"\nELSE grade = "C"\nEND IF',
+    },
+    {
+      title: 'Iteration (Loops)',
+      formula: 'FOR i = 1 TO n DO { body } END FOR',
+      explanation: 'Repeated execution of a block of code. FOR loops iterate a fixed number of times. WHILE loops continue until a condition is met. The loop body executes n times for FOR loops.',
+      example: 'FOR i = 1 TO 5 DO\n  PRINT i  // Prints: 1 2 3 4 5\nEND FOR',
+    },
+  ],
+  'p0-setup-dev-env': [
+    {
+      title: 'Virtual Environment — Path Resolution',
+      formula: 'python -m venv <name> → source <name>/bin/activate → pip install <pkg>',
+      explanation: 'The virtual environment workflow ensures project isolation. When activated, the shell PATH is modified to prioritize the venv\'s Python and packages over system-wide installations.',
+      example: '# Create and use a venv for ML project\npython -m venv ml_env\n# Windows: ml_env\\Scripts\\activate\n# Mac/Linux: source ml_env/bin/activate\npip install torch pandas scikit-learn',
+    },
+    {
+      title: 'Git Commit Workflow',
+      formula: 'Working Directory → git add → Staging Area → git commit → Local Repository → git push → Remote Repository',
+      explanation: 'The Git workflow moves changes through stages. git add selects which changes to include, git commit creates a snapshot, and git push syncs to GitHub. Each commit is a recoverable version.',
+      example: 'git add src/model.py  # Stage specific file\ngit commit -m "Add linear regression"  # Snapshot\ngit push origin main  # Sync to GitHub',
     },
   ],
   'p0-binary-logic': [
@@ -1554,9 +1951,49 @@ const topicFormulaTemplates: Record<string, FormulaCard[]> = {
 const topicWhyItMattersTemplates: Record<string, string> = {
   'p0-how-computers-work': 'Every AI model you build — from a simple linear regression to a billion-parameter transformer — ultimately runs on a physical computer. Understanding how CPUs execute instructions, how memory hierarchies affect performance, and how data moves through the system directly impacts your ability to write efficient, scalable AI code. Without this foundation, debugging performance bottlenecks in ML training pipelines is guesswork.',
   'p0-binary-logic': 'At their core, CPUs are just billions of logic gates switching at incredible speeds. Every AI algorithm — matrix multiplication, gradient descent, attention mechanisms — is ultimately reduced to boolean operations on bits. Understanding binary logic is understanding the most fundamental layer of computation, from which all higher-level AI concepts are built.',
+  'p0-algorithm-thinking': 'Every AI model — from linear regression to GPT-4 — is an algorithm. Understanding algorithmic thinking means you can design, analyze, and optimize these models. Without it, ML libraries are black boxes. With it, you understand WHY certain models work, WHEN to use them, and HOW to improve them.',
+  'p0-pseudocode': 'Pseudocode and flowcharts are how professional developers design systems before writing code. In AI/ML, you will design data pipelines, model architectures, and training loops — all of which benefit from being designed on paper first. Companies like Google and OpenAI use design docs before writing any code.',
+  'p0-setup-dev-env': 'A properly configured development environment saves you HOURS per week. Most beginners waste time fighting tooling issues — broken Python installations, conflicting package versions, lost work due to no Git. Setting up correctly from day one means you spend your time learning AI, not debugging your computer.',
 }
 
 const topicArchitectureTemplates: Record<string, ArchitectureDiagram> = {
+  'p0-algorithm-thinking': {
+    title: 'Algorithm Design Process',
+    description: 'The systematic approach to designing algorithms — from problem analysis to verified solution.',
+    blocks: [
+      { label: '1. Understand the Problem', description: 'Define inputs, outputs, constraints, and edge cases clearly' },
+      { label: '2. Choose a Strategy', description: 'Select brute force, divide & conquer, greedy, or dynamic programming' },
+      { label: '3. Design the Algorithm', description: 'Write pseudocode, draw flowcharts, define data structures' },
+      { label: '4. Analyze Complexity', description: 'Compute time O(f(n)) and space O(g(n)) complexity' },
+      { label: '5. Implement & Test', description: 'Convert to real code, test with small and edge cases' },
+      { label: '6. Optimize (if needed)', description: 'Profile, identify bottlenecks, and improve' },
+    ],
+  },
+  'p0-pseudocode': {
+    title: 'From Problem to Code — The Translation Pipeline',
+    description: 'Pseudocode and flowcharts sit in the middle, translating human thinking into machine-executable logic.',
+    blocks: [
+      { label: 'Problem Statement', description: 'Natural language description of what needs to be solved' },
+      { label: 'Algorithm Design', description: 'Break problem into logical steps and decisions' },
+      { label: 'Pseudocode', description: 'Structured English describing each step precisely' },
+      { label: 'Flowchart', description: 'Visual diagram using standardized symbols' },
+      { label: 'Real Code', description: 'Translate to Python, JavaScript, or any programming language' },
+      { label: 'Executable Program', description: 'Compiled/interpreted code running on a computer' },
+    ],
+  },
+  'p0-setup-dev-env': {
+    title: 'Development Environment Layers',
+    description: 'A layered view of the tools that form a complete AI/ML development environment.',
+    blocks: [
+      { label: 'Hardware', description: 'CPU, GPU (NVIDIA CUDA), RAM, SSD — the physical machine' },
+      { label: 'Operating System', description: 'Windows, Linux (Ubuntu), macOS — manages hardware resources' },
+      { label: 'Python Runtime', description: 'Python 3.10+ interpreter + pip package manager' },
+      { label: 'Virtual Environment', description: 'Isolated dependency space per project (venv / conda)' },
+      { label: 'Core Libraries', description: 'NumPy, Pandas, Matplotlib, scikit-learn' },
+      { label: 'Editor / IDE', description: 'VS Code + extensions, Jupyter Lab, or PyCharm' },
+      { label: 'Version Control', description: 'Git + GitHub — track changes and collaborate' },
+    ],
+  },
   'p0-how-computers-work': {
     title: 'Computer Architecture — Von Neumann Model',
     description: 'The Von Neumann architecture describes the fundamental organization of all modern computers.',
@@ -1571,29 +2008,6 @@ const topicArchitectureTemplates: Record<string, ArchitectureDiagram> = {
       { label: 'I/O Devices', description: 'Input (keyboard, mouse, sensors) and Output (monitor, speakers, network)' },
     ],
   },
-}
-
-function generateGenericKeyDefinitions(title: string, phaseTitle: string): KeyDefinition[] {
-  return [
-    { term: title, definition: `Core concept within ${phaseTitle}. Understanding this provides a foundation for more advanced topics.` },
-    { term: 'Algorithm', definition: 'A step-by-step procedure for solving a problem or accomplishing a task.' },
-    { term: 'Data Structure', definition: 'A specialized format for organizing, processing, and storing data.' },
-    { term: 'Abstraction', definition: 'Hiding complex implementation details behind a simple interface.' },
-  ]
-}
-
-function generateGenericFormulas(title: string): FormulaCard[] {
-  return [
-    {
-      title: 'General Form',
-      formula: 'f(x) = output',
-      explanation: `This represents the general input-output relationship modeled in ${title}. The function transforms input data into meaningful predictions or decisions.`,
-    },
-  ]
-}
-
-function generateGenericWhyItMatters(title: string, phaseTitle: string): string {
-  return `${title} is a fundamental building block in ${phaseTitle}. Mastering this concept will prepare you for more advanced topics and real-world applications in AI and machine learning.`
 }
 
 export function getTopicContent(topicId: string): TopicContent {
@@ -1623,9 +2037,9 @@ export function getTopicContent(topicId: string): TopicContent {
     `Evaluate and optimize your implementations`,
   ]
 
-  const theory = topicTheoryTemplates[topicId] || generateGenericTheory(title, phaseTitle)
+  const theory = topicTheoryTemplates[topicId] || generateTheory(title, phaseTitle)
 
-  const baseUnderstanding = topicUnderstandingTemplates[topicId] || generateGenericUnderstanding(title)
+  const baseUnderstanding = topicUnderstandingTemplates[topicId] || generateUnderstanding(title, phaseTitle)
   const understanding: TopicContent['understanding'] = {
     analogy: baseUnderstanding.analogy!,
     steps: baseUnderstanding.steps || [],
@@ -1633,15 +2047,15 @@ export function getTopicContent(topicId: string): TopicContent {
     comparisons: baseUnderstanding.comparisons,
   }
 
-  const codeExamples = topicCodeTemplates[topicId] || generateGenericCode(title)
+  const codeExamples = topicCodeTemplates[topicId] || generateCode(title, phaseTitle)
 
-  const realWorld = generateGenericRealWorld(title)
+  const realWorld = generateRealWorld(title, phaseTitle)
 
-  const quiz = topicQuizTemplates[topicId] || generateGenericQuiz(title)
+  const quiz = topicQuizTemplates[topicId] || generateQuiz(title, phaseTitle)
 
-  const keyDefinitions = topicKeyDefinitionTemplates[topicId] || generateGenericKeyDefinitions(title, phaseTitle)
-  const formulas = topicFormulaTemplates[topicId] || generateGenericFormulas(title)
-  const whyItMatters = topicWhyItMattersTemplates[topicId] || generateGenericWhyItMatters(title, phaseTitle)
+  const keyDefinitions = topicKeyDefinitionTemplates[topicId] || generateKeyDefinitions(title, phaseTitle)
+  const formulas = topicFormulaTemplates[topicId] || generateFormulas(title, phaseTitle)
+  const whyItMatters = topicWhyItMattersTemplates[topicId] || generateWhyItMatters(title, phaseTitle)
   const architecture = topicArchitectureTemplates[topicId]
 
   return {

@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   BarChart3, Award, Target, TrendingUp, CheckCircle, Circle, Bookmark,
-  Clock, Zap, Flame, ChevronDown, ChevronRight, Medal, Trophy,
-  Star, Layers, Search, ArrowUpDown, Sparkles, Filter, Brain,
+  Clock, Flame, ChevronDown, ChevronRight, Medal, Trophy,
+  Star, Layers, Search, ArrowUpDown, Filter, Brain,
   BookOpen, Share2, Crown
 } from 'lucide-react'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'

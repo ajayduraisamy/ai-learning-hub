@@ -4,16 +4,16 @@ import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Lightbulb, Info, Target, ChevronRight, BookOpen, Sigma, Blocks, ArrowRight, ArrowDown } from 'lucide-react'
+import { Lightbulb, Info, Target, ChevronRight, BookOpen, Sigma, Blocks, ArrowDown } from 'lucide-react'
 import type { KeyDefinition, FormulaCard, ArchitectureDiagram, ArchitectureBlock } from '@/data/topicContent'
 
 interface TheoryTabProps {
   theory: string
   objectives: string[]
   prerequisites: string[]
-  keyDefinitions: KeyDefinition[]
-  formulas: FormulaCard[]
-  whyItMatters: string
+  keyDefinitions?: KeyDefinition[]
+  formulas?: FormulaCard[]
+  whyItMatters?: string
   architecture?: ArchitectureDiagram
 }
 
@@ -83,19 +83,22 @@ export default function TheoryTab({ theory, objectives, prerequisites, keyDefini
       )}
 
       {/* Why This Matters */}
-      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-5">
-        <div className="flex items-start gap-3">
-          <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-900/30 shrink-0">
-            <Lightbulb size={18} className="text-amber-600 dark:text-amber-400" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-amber-800 dark:text-amber-300 text-sm mb-1">Why This Matters</h3>
-            <p className="text-sm text-amber-700 dark:text-amber-300/70 leading-relaxed">{whyItMatters}</p>
+      {whyItMatters && (
+        <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-5">
+          <div className="flex items-start gap-3">
+            <div className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-900/30 shrink-0">
+              <Lightbulb size={18} className="text-amber-600 dark:text-amber-400" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-amber-800 dark:text-amber-300 text-sm mb-1">Why This Matters</h3>
+              <p className="text-sm text-amber-700 dark:text-amber-300/70 leading-relaxed">{whyItMatters}</p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Key Definitions */}
+      {keyDefinitions && keyDefinitions.length > 0 && (
       <div>
         <div className="flex items-center gap-2 mb-3">
           <Info size={16} className="text-primary-500" />
@@ -115,9 +118,10 @@ export default function TheoryTab({ theory, objectives, prerequisites, keyDefini
           ))}
         </div>
       </div>
+      )}
 
       {/* Formula Cards */}
-      {formulas.length > 0 && (
+      {formulas && formulas.length > 0 && (
         <div>
           <div className="flex items-center gap-2 mb-3">
             <Sigma size={16} className="text-primary-500" />

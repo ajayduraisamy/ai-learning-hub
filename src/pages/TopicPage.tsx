@@ -1,29 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   CheckCircle, Circle, Bookmark, ArrowLeft, ArrowRight,
-  Share2, FileText, Brain, Beaker, Code2, Building2,
-  Clock, HelpCircle, Sparkles, ChevronRight, Home,
+  Share2, FileText,
+  Clock, ChevronRight, Home,
   BarChart3,
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases, getTopicById } from '@/data/sidebarData'
 import { getTopicContent } from '@/data/topicContent'
-import TheoryTab from '@/components/topics/TheoryTab'
-import UnderstandingTab from '@/components/topics/UnderstandingTab'
-import CodeTab from '@/components/topics/CodeTab'
-import RealWorldTab from '@/components/topics/RealWorldTab'
-import QuizModal from '@/components/topics/QuizModal'
-
-const tabs = [
-  { id: 'theory', label: 'Theory', icon: Brain },
-  { id: 'understanding', label: 'Understanding', icon: Beaker },
-  { id: 'code', label: 'Code', icon: Code2 },
-  { id: 'real-world', label: 'Real-World', icon: Building2 },
-] as const
-
-type TabId = (typeof tabs)[number]['id']
 
 const difficultyColors: Record<string, string> = {
   Beginner: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -31,42 +17,11 @@ const difficultyColors: Record<string, string> = {
   Advanced: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
-function Confetti() {
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[80]">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 rounded-full"
-          style={{
-            background: ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444'][i % 5],
-            left: `${Math.random() * 100}%`,
-            top: '-10px',
-          }}
-          animate={{
-            y: ['0vh', '100vh'],
-            x: [0, (Math.random() - 0.5) * 200],
-            rotate: [0, 720],
-            opacity: [1, 0],
-          }}
-          transition={{
-            duration: 1.5 + Math.random(),
-            ease: 'easeIn',
-            delay: Math.random() * 0.5,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
 export default function TopicPage() {
   const { topicId } = useParams<{ topicId: string }>()
   const navigate = useNavigate()
   const { completedTopics, bookmarkedTopics, toggleComplete, toggleBookmark, setCurrentTopic, feedback, submitFeedback } = useStore()
 
-  const [activeTab, setActiveTab] = useState<TabId>('theory')
-  const [showQuiz, setShowQuiz] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
   const [justCompleted, setJustCompleted] = useState(false)
   const [feedbackText, setFeedbackText] = useState('')
@@ -105,8 +60,6 @@ export default function TopicPage() {
   }, [topicId, completedTopics, toggleComplete])
 
   useEffect(() => {
-    setActiveTab('theory')
-    setShowQuiz(false)
     setJustCompleted(false)
     setShowConfetti(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -131,14 +84,6 @@ export default function TopicPage() {
   return (
     <>
       {showConfetti && <Confetti />}
-      {showQuiz && (
-        <QuizModal
-          questions={content.quiz}
-          topicId={topicId}
-          topicTitle={topicInfo.title}
-          onClose={() => setShowQuiz(false)}
-        />
-      )}
 
       <div className="max-w-4xl mx-auto">
         <motion.div
@@ -214,68 +159,60 @@ export default function TopicPage() {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="flex border-b border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-all shrink-0 ${
-                    activeTab === tab.id
-                      ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-                      : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
-                  }`}
-                >
-                  <Icon size={16} />
-                  {tab.label}
-                </button>
-              )
-            })}
-          </div>
+          {/* Card Content */}
+          <div className="space-y-6">
+            {/* Overview */}
+            <Section title="Overview">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {content.overview}
+              </p>
+            </Section>
 
-          {/* Tab Content */}
-          <AnimatePresence mode="wait">
-            {activeTab === 'theory' && (
-              <TheoryTab
-                key="theory"
-                theory={content.theory}
-                objectives={content.objectives}
-                prerequisites={content.prerequisites}
-                keyDefinitions={content.keyDefinitions}
-                formulas={content.formulas}
-                whyItMatters={content.whyItMatters}
-                architecture={content.architecture}
-              />
-            )}
-            {activeTab === 'understanding' && (
-              <UnderstandingTab
-                key="understanding"
-                analogy={content.understanding.analogy}
-                steps={content.understanding.steps}
-                misconceptions={content.understanding.misconceptions}
-                comparisons={content.understanding.comparisons}
-              />
-            )}
-            {activeTab === 'code' && (
-              <CodeTab
-                key="code"
-                examples={content.codeExamples}
-              />
-            )}
-            {activeTab === 'real-world' && (
-              <RealWorldTab
-                key="real-world"
-                useCases={content.realWorld.useCases}
-                caseStudy={content.realWorld.caseStudy}
-                bestPractices={content.realWorld.bestPractices}
-                tools={content.realWorld.tools}
-                jobRoles={content.realWorld.jobRoles}
-                furtherReading={content.realWorld.furtherReading}
-              />
-            )}
-          </AnimatePresence>
+            {/* Key Concepts */}
+            <Section title="Key Concepts">
+              <div className="space-y-4">
+                {content.keyConcepts.map((concept, i) => (
+                  <div key={i}>
+                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
+                      {concept.title}
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      {concept.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Practical Application */}
+            <Section title="Practical Application">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {content.practicalApplication}
+              </p>
+            </Section>
+
+            {/* Common Pitfalls */}
+            <Section title="Common Pitfalls">
+              <div className="space-y-3">
+                {content.commonPitfalls.map((pitfall, i) => (
+                  <div key={i} className="flex gap-3">
+                    <span className="text-red-500 dark:text-red-400 text-sm font-bold shrink-0 mt-0.5">!</span>
+                    <div>
+                      <span className="font-semibold text-gray-900 dark:text-white text-sm">{pitfall.title}:</span>
+                      <span className="text-gray-600 dark:text-gray-400 text-sm"> {pitfall.description}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* Summary */}
+            <Section title="Summary">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {content.summary}
+              </p>
+            </Section>
+          </div>
 
           {/* Bottom Actions */}
           <div className="mt-10 space-y-4">
@@ -311,24 +248,6 @@ export default function TopicPage() {
               </div>
             )}
 
-            {/* Quiz Button */}
-            {isCompleted && (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-center"
-              >
-                <button
-                  onClick={() => setShowQuiz(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-500 to-accent-500 text-white rounded-xl hover:from-primary-600 hover:to-accent-600 transition-all text-sm font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  <HelpCircle size={16} />
-                  Take Quiz
-                  <Sparkles size={14} />
-                </button>
-              </motion.div>
-            )}
-
             {/* Next topic banner after completion */}
             {justCompleted && nextTopic && (
               <motion.div
@@ -338,7 +257,6 @@ export default function TopicPage() {
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Sparkles size={18} className="text-secondary-500" />
                     <span className="text-sm font-semibold text-secondary-700 dark:text-secondary-300">
                       Great job! Ready for the next topic?
                     </span>
@@ -440,5 +358,46 @@ export default function TopicPage() {
         </motion.div>
       </div>
     </>
+  )
+}
+
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/40">
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+        <span className="w-1 h-5 rounded-full bg-primary-500" />
+        {title}
+      </h3>
+      {children}
+    </div>
+  )
+}
+
+function Confetti() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[80]">
+      {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 rounded-full"
+          style={{
+            background: ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444'][i % 5],
+            left: `${Math.random() * 100}%`,
+            top: '-10px',
+          }}
+          animate={{
+            y: ['0vh', '100vh'],
+            x: [0, (Math.random() - 0.5) * 200],
+            rotate: [0, 720],
+            opacity: [1, 0],
+          }}
+          transition={{
+            duration: 1.5 + Math.random(),
+            ease: 'easeIn',
+            delay: Math.random() * 0.5,
+          }}
+        />
+      ))}
+    </div>
   )
 }

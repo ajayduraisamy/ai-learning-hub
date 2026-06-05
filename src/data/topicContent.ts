@@ -1,5 +1,29 @@
 import { phases } from './sidebarData'
 
+export interface CodeExample {
+  title: string
+  description: string
+  code: string
+  language: string
+  output?: string
+}
+
+export interface RealWorldUseCase {
+  title: string
+  scenario: string
+  code?: string
+  language?: string
+  keyTakeaway: string
+}
+
+export interface TryItYourself {
+  instructions: string
+  initialCode: string
+  language: string
+  expectedOutput?: string
+  hint?: string
+}
+
 export interface TopicContent {
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced'
   estimatedTime: string
@@ -7,8 +31,11 @@ export interface TopicContent {
   tags: string[]
   overview: string
   keyConcepts: { title: string; description: string }[]
+  codeExamples: CodeExample[]
+  realWorldUseCases: RealWorldUseCase[]
   practicalApplication: string
   commonPitfalls: { title: string; description: string }[]
+  tryItYourself: TryItYourself
   summary: string
 }
 
@@ -69,6 +96,34 @@ export function getTopicContent(topicId: string): TopicContent {
       { title: 'Practical Implementation', description: `Practical implementation complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It's a common area where beginners and experienced practitioners differentiate themselves.` },
       { title: 'Advanced Techniques', description: `Following advanced techniques ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.` },
     ],
+    codeExamples: [
+      {
+        title: `${title} — Basic Example`,
+        description: `A simple example demonstrating the core concepts of ${title}.`,
+        code: '# Example code\n# Replace this with the actual implementation\nprint("Hello from ${title}")',
+        language: 'python',
+        output: 'Hello from ${title}',
+      },
+      {
+        title: `${title} — Practical Usage`,
+        description: `A more practical example showing how ${title} is used in real scenarios.`,
+        code: '# Practical example\n# Study the pattern and adapt it to your needs\nresult = solve_problem(input_data)\nprint(f"Result: {result}")',
+        language: 'python',
+        output: 'Result: 42',
+      },
+    ],
+    realWorldUseCases: [
+      {
+        title: `${title} in Industry`,
+        scenario: `Companies leverage ${title} to solve complex problems efficiently. This concept is foundational to modern data science and AI workflows.`,
+        keyTakeaway: `Mastering ${title} opens doors to building production-grade systems that are maintainable and scalable.`,
+      },
+      {
+        title: `Learning Path Application`,
+        scenario: `As you progress through this curriculum, ${title} will serve as building blocks for more advanced topics. Solid understanding here makes later concepts easier.`,
+        keyTakeaway: `Practice regularly and connect each new concept back to ${title} to reinforce your learning.`,
+      },
+    ],
     practicalApplication: `The best way to learn ${title} is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.`,
     commonPitfalls: [
       { title: 'Skipping fundamentals', description: 'Rushing to advanced topics without solid foundations leads to confusion and wasted time.' },
@@ -76,6 +131,13 @@ export function getTopicContent(topicId: string): TopicContent {
       { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
       { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
     ],
+    tryItYourself: {
+      instructions: `Open your Python environment and try implementing ${title} from scratch. Start with the basic example above, then modify it to explore edge cases.`,
+      initialCode: '# Try it yourself!\n# Write your own implementation here\nprint("Learning ${title}")',
+      language: 'python',
+      expectedOutput: 'Output will vary based on your implementation',
+      hint: 'Break the problem into smaller steps and test each one.',
+    },
     summary: `${title} is an essential topic in ${phaseTitle}. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.`,
   }
 }

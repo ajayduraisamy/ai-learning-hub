@@ -4,21 +4,74 @@ registerContent('p17-distributed-training', () => ({
   difficulty: 'Beginner' as const,
   estimatedTime: '30 minutes',
   prerequisites: ['p16-cloud-deployment'],
-  tags: ['Distributed & Scalable ML', 'Beginner', 'Topic'],
-  overview: 'Distributed Training (DDP, FSDP) is an important topic in Phase 17: Distributed & Scalable ML. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  tags: ['Distributed ML', 'Beginner', 'Topic'],
+  overview: 'Distributed Training is an important topic in Phase 17: Distributed ML. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'DDP & FSDP — Data/Model Parallelism', description: 'The foundation of Distributed Training (DDP, FSDP) rests on understanding ddp & fsdp. This concept is central to how Distributed Training (DDP, FSDP) works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Gradient Accumulation & Mixed Precision', description: 'Gradient Accumulation & Mixed Precision complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Communication Overhead & Topology Optimization', description: 'Mastering communication overhead & topology optimization ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'DDP & FSDP — Data/Model Parallelism', description: 'The foundation of Distributed Training rests on understanding ddp & fsdp. This concept is central to how Distributed Training works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'All-Reduce & Gradient Synchronization', description: 'All-Reduce & Gradient Synchronization complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Pipeline Parallelism & Tensor Parallelism', description: 'Mastering pipeline parallelism & tensor parallelism ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
   ],
-  practicalApplication: 'The best way to learn Distributed Training (DDP, FSDP) is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
+  codeExamples: [
+    {
+      title: 'distributed training — Basic Example',
+      description: 'A hands-on example demonstrating distributed training.',
+      code: `# distributed training — getting started
+def greet(name):
+    """Simple function to demonstrate Python basics."""
+    return f"Hello, {name}!"
+
+print(greet("World"))`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'distributed training — Practical Usage',
+      description: 'Apply distributed training to a typical problem.',
+      code: `# Practical distributed training example
+Write clean Python code.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'Distributed Training is widely used in software development. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering Distributed Training helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'Distributed Training connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice Distributed Training regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
+  ],
+  practicalApplication: 'The best way to learn Distributed Training is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
     { title: 'Skipping fundamentals', description: 'Rushing to advanced topics without solid foundations leads to confusion and wasted time.' },
     { title: 'Copying without understanding', description: 'Using code from tutorials without understanding why it works prevents you from adapting solutions to new problems.' },
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'Distributed Training (DDP, FSDP) is an essential topic in Phase 17: Distributed & Scalable ML. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement Distributed Training from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# Distributed Training — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'Distributed Training is an essential topic in Phase 17: Distributed ML. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

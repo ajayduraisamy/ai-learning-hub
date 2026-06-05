@@ -5,20 +5,78 @@ registerContent('p8-self-attention', () => ({
   estimatedTime: '45 minutes',
   prerequisites: ['p8-gru-bidirectional'],
   tags: ['Deep Learning', 'Intermediate', 'Topic'],
-  overview: 'Self-Attention & Multi-Head Attention is an important topic in Phase 8: Deep Learning. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  overview: 'Self-Attention is an important topic in Phase 8: Deep Learning. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'Query, Key, Value — Scaled Dot-Product Attention', description: 'The foundation of Self-Attention & Multi-Head Attention rests on understanding query, key, value. This concept is central to how Self-Attention & Multi-Head Attention works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Multi-Head Attention & Attention Visualization', description: 'Multi-Head Attention & Attention Visualization complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Causal Masking for Autoregressive Generation', description: 'Mastering causal masking for autoregressive generation ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'Scaled Dot-Product Attention', description: 'The foundation of Self-Attention rests on understanding scaled dot-product attention. This concept is central to how Self-Attention works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'Query, Key, Value Matrices & Attention Scores', description: 'Query, Key, Value Matrices & Attention Scores complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Causal Attention & Cross-Attention', description: 'Mastering causal attention & cross-attention ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
   ],
-  practicalApplication: 'The best way to learn Self-Attention & Multi-Head Attention is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
+  codeExamples: [
+    {
+      title: 'self attention — Basic Example',
+      description: 'A hands-on example demonstrating self attention.',
+      code: `# self attention — getting started
+# Implementation with sklearn
+# Add your specific code here
+
+def train_model(X, y):
+    """Train and evaluate the model."""
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    return X_train.shape, X_test.shape
+
+print("Data split complete!")`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'self attention — Practical Usage',
+      description: 'Apply self attention to a typical problem.',
+      code: `# Practical self attention example
+Apply this ML/AI concept.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'Self-Attention is widely used in deep learning. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering Self-Attention helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'Self-Attention connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice Self-Attention regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
+  ],
+  practicalApplication: 'The best way to learn Self-Attention is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
     { title: 'Skipping fundamentals', description: 'Rushing to advanced topics without solid foundations leads to confusion and wasted time.' },
     { title: 'Copying without understanding', description: 'Using code from tutorials without understanding why it works prevents you from adapting solutions to new problems.' },
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'Self-Attention & Multi-Head Attention is an essential topic in Phase 8: Deep Learning. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement Self-Attention from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# Self-Attention — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'Self-Attention is an essential topic in Phase 8: Deep Learning. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

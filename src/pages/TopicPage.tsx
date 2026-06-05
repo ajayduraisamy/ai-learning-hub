@@ -5,11 +5,13 @@ import {
   CheckCircle, Circle, Bookmark, ArrowLeft, ArrowRight,
   Share2, FileText,
   Clock, ChevronRight, Home,
-  BarChart3,
+  BarChart3, Code2, Briefcase, Lightbulb,
 } from 'lucide-react'
 import { useStore } from '@/store/useStore'
 import { phases, getTopicById } from '@/data/sidebarData'
 import { getTopicContent } from '@/data/topicContent'
+import CodeBlock from '@/components/topics/CodeBlock'
+import CodePlayground from '@/components/topics/CodePlayground'
 
 const difficultyColors: Record<string, string> = {
   Beginner: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -191,6 +193,66 @@ export default function TopicPage() {
               </p>
             </Section>
 
+            {/* Code Examples */}
+            {content.codeExamples.length > 0 && (
+              <Section title="Code Examples" icon={Code2}>
+                <div className="space-y-5">
+                  {content.codeExamples.map((ex, i) => (
+                    <div key={i}>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 dark:text-white text-sm">{ex.title}</h4>
+                          <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{ex.description}</p>
+                        </div>
+                      </div>
+                      <CodeBlock code={ex.code} language={ex.language || 'python'} />
+                      {ex.output && (
+                        <div className="mt-2 rounded-lg bg-slate-900/50 border border-slate-700/30 overflow-hidden">
+                          <div className="px-3 py-1 bg-slate-800/50 border-b border-slate-700/30">
+                            <span className="text-[10px] text-slate-500 font-semibold">Output</span>
+                          </div>
+                          <pre className="text-[0.75rem] text-slate-300 font-mono p-3 m-0 whitespace-pre-wrap">{ex.output}</pre>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Real-World Use Cases */}
+            {content.realWorldUseCases.length > 0 && (
+              <Section title="Real-World Use Cases" icon={Briefcase}>
+                <div className="space-y-4">
+                  {content.realWorldUseCases.map((useCase, i) => (
+                    <div key={i} className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30">
+                      <h4 className="font-semibold text-gray-900 dark:text-white text-sm mb-2 flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0" />
+                        {useCase.title}
+                      </h4>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-2">{useCase.scenario}</p>
+                      {useCase.code && (
+                        <div className="mb-2">
+                          <CodeBlock code={useCase.code} language={useCase.language || 'python'} showCopy={false} />
+                        </div>
+                      )}
+                      <div className="flex items-start gap-2 text-xs text-primary-600 dark:text-primary-400">
+                        <span className="font-semibold shrink-0">Key Takeaway:</span>
+                        <span>{useCase.keyTakeaway}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* Practical Application */}
+            <Section title="Practical Application">
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {content.practicalApplication}
+              </p>
+            </Section>
+
             {/* Common Pitfalls */}
             <Section title="Common Pitfalls">
               <div className="space-y-3">
@@ -204,6 +266,17 @@ export default function TopicPage() {
                   </div>
                 ))}
               </div>
+            </Section>
+
+            {/* Try It Yourself */}
+            <Section title="Try It Yourself" icon={Lightbulb}>
+              <CodePlayground
+                instructions={content.tryItYourself.instructions}
+                initialCode={content.tryItYourself.initialCode}
+                language={content.tryItYourself.language}
+                expectedOutput={content.tryItYourself.expectedOutput}
+                hint={content.tryItYourself.hint}
+              />
             </Section>
 
             {/* Summary */}
@@ -361,11 +434,12 @@ export default function TopicPage() {
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({ title, icon: Icon, children }: { title: string; icon?: React.ComponentType<{ size?: number; className?: string }>; children: React.ReactNode }) {
   return (
     <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/40">
       <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
         <span className="w-1 h-5 rounded-full bg-primary-500" />
+        {Icon && <Icon size={16} className="text-primary-500" />}
         {title}
       </h3>
       {children}

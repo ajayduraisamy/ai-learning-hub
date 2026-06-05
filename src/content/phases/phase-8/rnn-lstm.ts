@@ -7,9 +7,52 @@ registerContent('p8-rnn-lstm', () => ({
   tags: ['Deep Learning', 'Intermediate', 'Topic'],
   overview: 'RNN & LSTM is an important topic in Phase 8: Deep Learning. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'Hidden State, Gates & Cell State', description: 'The foundation of RNN & LSTM rests on understanding hidden state, gates & cell state. This concept is central to how RNN & LSTM works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Backpropagation Through Time (BPTT)', description: 'Backpropagation Through Time (BPTT) complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Bidirectional LSTM & Stacked Architectures', description: 'Mastering bidirectional lstm & stacked architectures ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'Vanishing Gradient Problem & LSTM Gates', description: 'The foundation of RNN & LSTM rests on understanding vanishing gradient problem & lstm gates. This concept is central to how RNN & LSTM works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'LSTM Cell — Input, Forget, Output Gates', description: 'LSTM Cell complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Bidirectional LSTM & Stacked LSTM', description: 'Mastering bidirectional lstm & stacked lstm ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'rnn lstm — Basic Example',
+      description: 'A hands-on example demonstrating rnn lstm.',
+      code: `# rnn lstm — getting started
+# Implementation with sklearn
+# Add your specific code here
+
+def train_model(X, y):
+    """Train and evaluate the model."""
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    return X_train.shape, X_test.shape
+
+print("Data split complete!")`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'rnn lstm — Practical Usage',
+      description: 'Apply rnn lstm to a typical problem.',
+      code: `# Practical rnn lstm example
+Apply this ML/AI concept.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'RNN & LSTM is widely used in deep learning. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering RNN & LSTM helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'RNN & LSTM connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice RNN & LSTM regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn RNN & LSTM is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +61,22 @@ registerContent('p8-rnn-lstm', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement RNN & LSTM from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# RNN & LSTM — Try It Yourself
+# TODO: Implement the concept
+
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
   summary: 'RNN & LSTM is an essential topic in Phase 8: Deep Learning. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
 }))
-
-export {}

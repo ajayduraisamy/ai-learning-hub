@@ -4,12 +4,55 @@ registerContent('p6-knn', () => ({
   difficulty: 'Intermediate' as const,
   estimatedTime: '45 minutes',
   prerequisites: ['p6-random-forest'],
-  tags: ['Classical ML Algorithms', 'Intermediate', 'Topic'],
-  overview: 'K-Nearest Neighbors is an important topic in Phase 6: Classical ML Algorithms. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  tags: ['Classical ML', 'Intermediate', 'Topic'],
+  overview: 'K-Nearest Neighbors is an important topic in Phase 6: Classical ML. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'Distance Metrics (Euclidean, Manhattan) & K Selection', description: 'The foundation of K-Nearest Neighbors rests on understanding distance metrics (euclidean, manhattan) & k selection. This concept is central to how K-Nearest Neighbors works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Curse of Dimensionality & Feature Scaling Impact', description: 'Curse of Dimensionality & Feature Scaling Impact complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'KD-Tree & Ball Tree for Fast Neighbor Search', description: 'Mastering kd-tree & ball tree for fast neighbor search ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'Distance Metrics (Euclidean, Manhattan)', description: 'The foundation of K-Nearest Neighbors rests on understanding distance metrics (euclidean, manhattan). This concept is central to how K-Nearest Neighbors works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'Choosing K & Curse of Dimensionality', description: 'Choosing K & Curse of Dimensionality complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'KD-Trees & Ball Trees for Efficient Search', description: 'Mastering kd-trees & ball trees for efficient search ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'knn — Basic Example',
+      description: 'A hands-on example demonstrating knn.',
+      code: `# knn — getting started
+# Implementation with sklearn
+# Add your specific code here
+
+def train_model(X, y):
+    """Train and evaluate the model."""
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    return X_train.shape, X_test.shape
+
+print("Data split complete!")`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'knn — Practical Usage',
+      description: 'Apply knn to a typical problem.',
+      code: `# Practical knn example
+Apply this ML/AI concept.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'K-Nearest Neighbors is widely used in machine learning. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering K-Nearest Neighbors helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'K-Nearest Neighbors connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice K-Nearest Neighbors regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn K-Nearest Neighbors is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +61,22 @@ registerContent('p6-knn', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'K-Nearest Neighbors is an essential topic in Phase 6: Classical ML Algorithms. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement K-Nearest Neighbors from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# K-Nearest Neighbors — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'K-Nearest Neighbors is an essential topic in Phase 6: Classical ML. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

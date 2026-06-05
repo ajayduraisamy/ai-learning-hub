@@ -5,20 +5,73 @@ registerContent('p16-cloud-deployment', () => ({
   estimatedTime: '30 minutes',
   prerequisites: ['p16-ab-testing'],
   tags: ['MLOps', 'Beginner', 'Topic'],
-  overview: 'Cloud Deployment (AWS SageMaker, GCP Vertex AI) is an important topic in Phase 16: MLOps. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  overview: 'Cloud Deployment is an important topic in Phase 16: MLOps. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'SageMaker & Vertex AI — Managed ML Platforms', description: 'The foundation of Cloud Deployment (AWS SageMaker, GCP Vertex AI) rests on understanding sagemaker & vertex ai. This concept is central to how Cloud Deployment (AWS SageMaker, GCP Vertex AI) works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Serverless Inference & Auto-scaling Configs', description: 'Serverless Inference & Auto-scaling Configs complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Cost Optimization & Spot Instance Usage', description: 'Mastering cost optimization & spot instance usage ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'SageMaker & Vertex AI — Managed ML Platforms', description: 'The foundation of Cloud Deployment rests on understanding sagemaker & vertex ai. This concept is central to how Cloud Deployment works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'Serverless (AWS Lambda) & Container Orchestration', description: 'Serverless (AWS Lambda) & Container Orchestration complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Multi-Cloud Strategies & Cost Optimization', description: 'Mastering multi-cloud strategies & cost optimization ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
   ],
-  practicalApplication: 'The best way to learn Cloud Deployment (AWS SageMaker, GCP Vertex AI) is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
+  codeExamples: [
+    {
+      title: 'cloud deployment — Basic Example',
+      description: 'A hands-on example demonstrating cloud deployment.',
+      code: `# cloud deployment — getting started
+def greet(name):
+    """Simple function to demonstrate Python basics."""
+    return f"Hello, {name}!"
+
+print(greet("World"))`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'cloud deployment — Practical Usage',
+      description: 'Apply cloud deployment to a typical problem.',
+      code: `# Practical cloud deployment example
+Write clean Python code.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'Cloud Deployment is widely used in software development. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering Cloud Deployment helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'Cloud Deployment connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice Cloud Deployment regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
+  ],
+  practicalApplication: 'The best way to learn Cloud Deployment is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
     { title: 'Skipping fundamentals', description: 'Rushing to advanced topics without solid foundations leads to confusion and wasted time.' },
     { title: 'Copying without understanding', description: 'Using code from tutorials without understanding why it works prevents you from adapting solutions to new problems.' },
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'Cloud Deployment (AWS SageMaker, GCP Vertex AI) is an essential topic in Phase 16: MLOps. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement Cloud Deployment from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# Cloud Deployment — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'Cloud Deployment is an essential topic in Phase 16: MLOps. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

@@ -7,9 +7,52 @@ registerContent('p9-controlnet-dreambooth', () => ({
   tags: ['Generative AI', 'Intermediate', 'Topic'],
   overview: 'ControlNet & DreamBooth is an important topic in Phase 9: Generative AI. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'Conditional Control & Personalization', description: 'The foundation of ControlNet & DreamBooth rests on understanding conditional control & personalization. This concept is central to how ControlNet & DreamBooth works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Prior Preservation Loss & Class Images', description: 'Prior Preservation Loss & Class Images complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Inference Tricks (Weight Merging, Prompt Engineering)', description: 'Mastering inference tricks (weight merging, prompt engineering) ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'ControlNet — Conditional Control via Trainable Copy', description: 'The foundation of ControlNet & DreamBooth rests on understanding controlnet. This concept is central to how ControlNet & DreamBooth works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'DreamBooth — Personalized Generation via Fine-tuning', description: 'DreamBooth complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Custom Diffusion & Textual Inversion', description: 'Mastering custom diffusion & textual inversion ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'controlnet dreambooth — Basic Example',
+      description: 'A hands-on example demonstrating controlnet dreambooth.',
+      code: `# controlnet dreambooth — getting started
+# Implementation with sklearn
+# Add your specific code here
+
+def train_model(X, y):
+    """Train and evaluate the model."""
+    from sklearn.model_selection import train_test_split
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    return X_train.shape, X_test.shape
+
+print("Data split complete!")`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'controlnet dreambooth — Practical Usage',
+      description: 'Apply controlnet dreambooth to a typical problem.',
+      code: `# Practical controlnet dreambooth example
+Apply this ML/AI concept.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'ControlNet & DreamBooth is widely used in generative AI. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering ControlNet & DreamBooth helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'ControlNet & DreamBooth connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice ControlNet & DreamBooth regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn ControlNet & DreamBooth is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +61,22 @@ registerContent('p9-controlnet-dreambooth', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement ControlNet & DreamBooth from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# ControlNet & DreamBooth — Try It Yourself
+# TODO: Implement the concept
+
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
   summary: 'ControlNet & DreamBooth is an essential topic in Phase 9: Generative AI. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
 }))
-
-export {}

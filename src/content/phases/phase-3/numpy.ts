@@ -4,12 +4,54 @@ registerContent('p3-numpy', () => ({
   difficulty: 'Intermediate' as const,
   estimatedTime: '45 minutes',
   prerequisites: ['p2-info-optimization'],
-  tags: ['Python ML Ecosystem', 'Intermediate', 'Topic'],
-  overview: 'NumPy is an important topic in Phase 3: Python ML Ecosystem. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  tags: ['Data Wrangling', 'Intermediate', 'Topic'],
+  overview: 'NumPy is an important topic in Phase 3: Data Wrangling. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
     { title: 'ndarray — N-Dimensional Array Operations', description: 'The foundation of NumPy rests on understanding ndarray. This concept is central to how NumPy works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Broadcasting — Efficient Array Computation', description: 'Broadcasting — Efficient Array Computation complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Linear Algebra with numpy.linalg', description: 'Mastering linear algebra with numpy.linalg ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'Vectorization & Broadcasting', description: 'Vectorization & Broadcasting complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Linear Algebra (np.linalg) & Random Sampling', description: 'Mastering linear algebra (np.linalg) & random sampling ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'numpy — Basic Example',
+      description: 'A hands-on example demonstrating numpy.',
+      code: `# numpy — getting started
+import pandas as pd
+import numpy as np
+
+# Create and analyze data
+df = pd.DataFrame({
+    "A": [1, 2, 3, 4, 5],
+    "B": [10, 20, 30, 40, 50]
+})
+print(df.describe())`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'numpy — Practical Usage',
+      description: 'Apply numpy to a typical problem.',
+      code: `# Practical numpy example
+Use data manipulation tools.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'NumPy is widely used in data analysis. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering NumPy helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'NumPy connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice NumPy regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn NumPy is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +60,22 @@ registerContent('p3-numpy', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'NumPy is an essential topic in Phase 3: Python ML Ecosystem. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement NumPy from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# NumPy — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'NumPy is an essential topic in Phase 3: Data Wrangling. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

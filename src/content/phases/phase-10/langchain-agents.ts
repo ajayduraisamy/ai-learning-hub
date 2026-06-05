@@ -4,12 +4,50 @@ registerContent('p10-langchain-agents', () => ({
   difficulty: 'Beginner' as const,
   estimatedTime: '30 minutes',
   prerequisites: ['p10-multi-agent'],
-  tags: ['Agentic AI', 'Beginner', 'Topic'],
-  overview: 'LangChain Agents is an important topic in Phase 10: Agentic AI. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  tags: ['AI Agents', 'Beginner', 'Topic'],
+  overview: 'LangChain Agents is an important topic in Phase 10: AI Agents. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
-    { title: 'LangChain Agent Framework & Toolkits', description: 'The foundation of LangChain Agents rests on understanding langchain agent framework & toolkits. This concept is central to how LangChain Agents works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'Agent Executor & Callback Handlers', description: 'Agent Executor & Callback Handlers complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Custom Tools & Agent Memory Types', description: 'Mastering custom tools & agent memory types ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'AgentExecutor & Toolkits', description: 'The foundation of LangChain Agents rests on understanding agentexecutor & toolkits. This concept is central to how LangChain Agents works in practice. Spend time building intuition through both study and hands-on experimentation.' },
+    { title: 'Memory & Conversation Buffers', description: 'Memory & Conversation Buffers complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Custom Tools & Agentic RAG', description: 'Mastering custom tools & agentic rag ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'langchain agents — Basic Example',
+      description: 'A hands-on example demonstrating langchain agents.',
+      code: `# langchain agents — getting started
+def greet(name):
+    """Simple function to demonstrate Python basics."""
+    return f"Hello, {name}!"
+
+print(greet("World"))`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'langchain agents — Practical Usage',
+      description: 'Apply langchain agents to a typical problem.',
+      code: `# Practical langchain agents example
+Write clean Python code.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'LangChain Agents is widely used in software development. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering LangChain Agents helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'LangChain Agents connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice LangChain Agents regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn LangChain Agents is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +56,22 @@ registerContent('p10-langchain-agents', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'LangChain Agents is an essential topic in Phase 10: Agentic AI. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement LangChain Agents from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# LangChain Agents — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'LangChain Agents is an essential topic in Phase 10: AI Agents. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))

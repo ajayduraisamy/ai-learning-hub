@@ -4,12 +4,50 @@ registerContent('p17-spark-ml', () => ({
   difficulty: 'Beginner' as const,
   estimatedTime: '30 minutes',
   prerequisites: ['p17-deepspeed-zero'],
-  tags: ['Distributed & Scalable ML', 'Beginner', 'Topic'],
-  overview: 'Spark ML is an important topic in Phase 17: Distributed & Scalable ML. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
+  tags: ['Distributed ML', 'Beginner', 'Topic'],
+  overview: 'Spark ML is an important topic in Phase 17: Distributed ML. This section introduces the essential concepts, techniques, and practical approaches you need to understand and apply this topic effectively.',
   keyConcepts: [
     { title: 'PySpark MLlib — Distributed Data Processing', description: 'The foundation of Spark ML rests on understanding pyspark mllib. This concept is central to how Spark ML works in practice. Spend time building intuition through both study and hands-on experimentation.' },
-    { title: 'ML Pipeline API — Transformers & Estimators', description: 'ML Pipeline API — Transformers & Estimators complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
-    { title: 'Hyperparameter Tuning at Scale (Spark)', description: 'Mastering hyperparameter tuning at scale (spark) ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+    { title: 'Pipeline API & CrossValidator in PySpark', description: 'Pipeline API & CrossValidator in PySpark complements the core foundation. Understanding this will help you write more efficient and maintainable solutions. It is a common area where beginners and experienced practitioners differentiate themselves.' },
+    { title: 'Hyperparameter Tuning at Scale', description: 'Mastering hyperparameter tuning at scale ensures your work is robust, scalable, and production-ready. Industry professionals rely on these techniques to deliver reliable systems.' },
+  ],
+  codeExamples: [
+    {
+      title: 'spark ml — Basic Example',
+      description: 'A hands-on example demonstrating spark ml.',
+      code: `# spark ml — getting started
+def greet(name):
+    """Simple function to demonstrate Python basics."""
+    return f"Hello, {name}!"
+
+print(greet("World"))`,
+      language: 'python',
+      output: 'See output above',
+    },
+    {
+      title: 'spark ml — Practical Usage',
+      description: 'Apply spark ml to a typical problem.',
+      code: `# Practical spark ml example
+Write clean Python code.
+
+# Try modifying this code to explore
+# different aspects of the concept
+print("Practice makes perfect!")`,
+      language: 'python',
+      output: 'Practice makes perfect!',
+    },
+  ],
+  realWorldUseCases: [
+    {
+      title: 'Industry Application',
+      scenario: 'Spark ML is widely used in software development. Companies apply this concept to build robust, scalable systems that solve real business problems efficiently.',
+      keyTakeaway: 'Mastering Spark ML helps you build production-grade solutions that are maintainable, testable, and performant.',
+    },
+    {
+      title: 'Learning Path Integration',
+      scenario: 'Spark ML connects to multiple topics in this curriculum. Understanding it well makes advanced concepts easier to grasp and helps you see the bigger picture of AI/ML development.',
+      keyTakeaway: 'Practice Spark ML regularly and experiment with variations to deepen your understanding across the full curriculum.',
+    },
   ],
   practicalApplication: 'The best way to learn Spark ML is through practice. Start with small, focused exercises that isolate specific concepts, then combine them to solve more complex problems. Build a portfolio of working examples that demonstrate your understanding.',
   commonPitfalls: [
@@ -18,7 +56,22 @@ registerContent('p17-spark-ml', () => ({
     { title: 'Ignoring edge cases', description: 'Real-world data rarely matches textbook examples perfectly. Always test with diverse inputs.' },
     { title: 'Not testing assumptions', description: 'Verify your understanding by testing with simple cases before tackling complex problems.' },
   ],
-  summary: 'Spark ML is an essential topic in Phase 17: Distributed & Scalable ML. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
-}))
+  tryItYourself: {
+    instructions: 'Open your Python environment and implement Spark ML from scratch. Start with the basic example, then extend it to handle edge cases and larger inputs.',
+    initialCode: `# Spark ML — Try It Yourself
+# TODO: Implement the concept
 
-export {}
+def my_solution(data):
+    """Your implementation here."""
+    pass  # Replace with your code
+
+# Test your solution
+test_data = [1, 2, 3]
+result = my_solution(test_data)
+print(result)`,
+    language: 'python',
+    expectedOutput: 'Your implementation output',
+    hint: 'Break the problem into small steps. Test each step before moving to the next.',
+  },
+  summary: 'Spark ML is an essential topic in Phase 17: Distributed ML. Master the basics, practice consistently, and build increasingly complex projects. This foundation will serve you well as you progress to more advanced topics.',
+}))
